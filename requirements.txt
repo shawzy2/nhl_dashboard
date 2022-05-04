@@ -1,0 +1,7 @@
+notebook
+pandas
+requests
+numpy
+matplotlib
+scipy
+sklearn
