@@ -1,0 +1,434 @@
+{
+    "8478104": {
+        "currentTeamId": 3,
+        "name": "Sammy Blais",
+        "jersey": "91",
+        "position": "LW"
+    },
+    "8471817": {
+        "currentTeamId": 3,
+        "name": "Ryan Reaves",
+        "jersey": "75",
+        "position": "RW"
+    },
+    "8474027": {
+        "currentTeamId": 3,
+        "name": "Justin Braun",
+        "jersey": "61",
+        "position": "D"
+    },
+    "8475184": {
+        "currentTeamId": 3,
+        "name": "Chris Kreider",
+        "jersey": "20",
+        "position": "LW"
+    },
+    "8475735": {
+        "currentTeamId": 3,
+        "name": "Greg McKegg",
+        "jersey": "14",
+        "position": "C"
+    },
+    "8475747": {
+        "currentTeamId": 3,
+        "name": "Patrik Nemeth",
+        "jersey": "12",
+        "position": "D"
+    },
+    "8475797": {
+        "currentTeamId": 3,
+        "name": "Jarred Tinordi",
+        "jersey": "5",
+        "position": "D"
+    },
+    "8476234": {
+        "currentTeamId": 3,
+        "name": "Keith Kinkaid",
+        "jersey": "71",
+        "position": "G"
+    },
+    "8476458": {
+        "currentTeamId": 3,
+        "name": "Ryan Strome",
+        "jersey": "16",
+        "position": "C"
+    },
+    "8476459": {
+        "currentTeamId": 3,
+        "name": "Mika Zibanejad",
+        "jersey": "93",
+        "position": "C"
+    },
+    "8476624": {
+        "currentTeamId": 3,
+        "name": "Barclay Goodrow",
+        "jersey": "21",
+        "position": "C"
+    },
+    "8476885": {
+        "currentTeamId": 3,
+        "name": "Jacob Trouba",
+        "jersey": "8",
+        "position": "D"
+    },
+    "8477353": {
+        "currentTeamId": 3,
+        "name": "Tyler Motte",
+        "jersey": "64",
+        "position": "C"
+    },
+    "8477380": {
+        "currentTeamId": 3,
+        "name": "Jonny Brodzinski",
+        "jersey": "76",
+        "position": "C"
+    },
+    "8477429": {
+        "currentTeamId": 3,
+        "name": "Andrew Copp",
+        "jersey": "18",
+        "position": "C"
+    },
+    "8478048": {
+        "currentTeamId": 3,
+        "name": "Igor Shesterkin",
+        "jersey": "31",
+        "position": "G"
+    },
+    "8478211": {
+        "currentTeamId": 3,
+        "name": "Dryden Hunt",
+        "jersey": "29",
+        "position": "LW"
+    },
+    "8478366": {
+        "currentTeamId": 3,
+        "name": "Frank Vatrano",
+        "jersey": "77",
+        "position": "C"
+    },
+    "8478550": {
+        "currentTeamId": 3,
+        "name": "Artemi Panarin",
+        "jersey": "10",
+        "position": "LW"
+    },
+    "8478903": {
+        "currentTeamId": 3,
+        "name": "Adam Huska",
+        "jersey": "32",
+        "position": "G"
+    },
+    "8479291": {
+        "currentTeamId": 3,
+        "name": "Kevin Rooney",
+        "jersey": "17",
+        "position": "C"
+    },
+    "8479323": {
+        "currentTeamId": 3,
+        "name": "Adam Fox",
+        "jersey": "23",
+        "position": "D"
+    },
+    "8479324": {
+        "currentTeamId": 3,
+        "name": "Ryan Lindgren",
+        "jersey": "55",
+        "position": "D"
+    },
+    "8479328": {
+        "currentTeamId": 3,
+        "name": "Julien Gauthier",
+        "jersey": "15",
+        "position": "RW"
+    },
+    "8479333": {
+        "currentTeamId": 3,
+        "name": "Libor Hajek",
+        "jersey": "25",
+        "position": "D"
+    },
+    "8479364": {
+        "currentTeamId": 3,
+        "name": "Tim Gettinger",
+        "jersey": "26",
+        "position": "LW"
+    },
+    "8480078": {
+        "currentTeamId": 3,
+        "name": "Filip Chytil",
+        "jersey": "72",
+        "position": "C"
+    },
+    "8480382": {
+        "currentTeamId": 3,
+        "name": "Alexandar Georgiev",
+        "jersey": "40",
+        "position": "G"
+    },
+    "8480817": {
+        "currentTeamId": 3,
+        "name": "K'Andre Miller",
+        "jersey": "79",
+        "position": "D"
+    },
+    "8480878": {
+        "currentTeamId": 3,
+        "name": "Nils Lundkvist",
+        "jersey": "27",
+        "position": "D"
+    },
+    "8480986": {
+        "currentTeamId": 3,
+        "name": "Lauri Pajuniemi",
+        "jersey": "49",
+        "position": "RW"
+    },
+    "8481525": {
+        "currentTeamId": 3,
+        "name": "Matthew Robertson",
+        "jersey": "44",
+        "position": "D"
+    },
+    "8481554": {
+        "currentTeamId": 3,
+        "name": "Kaapo Kakko",
+        "jersey": "24",
+        "position": "RW"
+    },
+    "8481708": {
+        "currentTeamId": 3,
+        "name": "Zac Jones",
+        "jersey": "6",
+        "position": "D"
+    },
+    "8482073": {
+        "currentTeamId": 3,
+        "name": "Braden Schneider",
+        "jersey": "45",
+        "position": "D"
+    },
+    "8482109": {
+        "currentTeamId": 3,
+        "name": "Alexis Lafrenière",
+        "jersey": "13",
+        "position": "LW"
+    },
+    "8478104": {
+        "currentTeamId": 3,
+        "name": "Sammy Blais",
+        "jersey": "91",
+        "position": "LW"
+    },
+    "8471817": {
+        "currentTeamId": 3,
+        "name": "Ryan Reaves",
+        "jersey": "75",
+        "position": "RW"
+    },
+    "8474027": {
+        "currentTeamId": 3,
+        "name": "Justin Braun",
+        "jersey": "61",
+        "position": "D"
+    },
+    "8475184": {
+        "currentTeamId": 3,
+        "name": "Chris Kreider",
+        "jersey": "20",
+        "position": "LW"
+    },
+    "8475735": {
+        "currentTeamId": 3,
+        "name": "Greg McKegg",
+        "jersey": "14",
+        "position": "C"
+    },
+    "8475747": {
+        "currentTeamId": 3,
+        "name": "Patrik Nemeth",
+        "jersey": "12",
+        "position": "D"
+    },
+    "8475797": {
+        "currentTeamId": 3,
+        "name": "Jarred Tinordi",
+        "jersey": "5",
+        "position": "D"
+    },
+    "8476234": {
+        "currentTeamId": 3,
+        "name": "Keith Kinkaid",
+        "jersey": "71",
+        "position": "G"
+    },
+    "8476458": {
+        "currentTeamId": 3,
+        "name": "Ryan Strome",
+        "jersey": "16",
+        "position": "C"
+    },
+    "8476459": {
+        "currentTeamId": 3,
+        "name": "Mika Zibanejad",
+        "jersey": "93",
+        "position": "C"
+    },
+    "8476624": {
+        "currentTeamId": 3,
+        "name": "Barclay Goodrow",
+        "jersey": "21",
+        "position": "C"
+    },
+    "8476885": {
+        "currentTeamId": 3,
+        "name": "Jacob Trouba",
+        "jersey": "8",
+        "position": "D"
+    },
+    "8477353": {
+        "currentTeamId": 3,
+        "name": "Tyler Motte",
+        "jersey": "64",
+        "position": "C"
+    },
+    "8477380": {
+        "currentTeamId": 3,
+        "name": "Jonny Brodzinski",
+        "jersey": "76",
+        "position": "C"
+    },
+    "8477429": {
+        "currentTeamId": 3,
+        "name": "Andrew Copp",
+        "jersey": "18",
+        "position": "C"
+    },
+    "8478048": {
+        "currentTeamId": 3,
+        "name": "Igor Shesterkin",
+        "jersey": "31",
+        "position": "G"
+    },
+    "8478211": {
+        "currentTeamId": 3,
+        "name": "Dryden Hunt",
+        "jersey": "29",
+        "position": "LW"
+    },
+    "8478366": {
+        "currentTeamId": 3,
+        "name": "Frank Vatrano",
+        "jersey": "77",
+        "position": "C"
+    },
+    "8478550": {
+        "currentTeamId": 3,
+        "name": "Artemi Panarin",
+        "jersey": "10",
+        "position": "LW"
+    },
+    "8478903": {
+        "currentTeamId": 3,
+        "name": "Adam Huska",
+        "jersey": "32",
+        "position": "G"
+    },
+    "8479291": {
+        "currentTeamId": 3,
+        "name": "Kevin Rooney",
+        "jersey": "17",
+        "position": "C"
+    },
+    "8479323": {
+        "currentTeamId": 3,
+        "name": "Adam Fox",
+        "jersey": "23",
+        "position": "D"
+    },
+    "8479324": {
+        "currentTeamId": 3,
+        "name": "Ryan Lindgren",
+        "jersey": "55",
+        "position": "D"
+    },
+    "8479328": {
+        "currentTeamId": 3,
+        "name": "Julien Gauthier",
+        "jersey": "15",
+        "position": "RW"
+    },
+    "8479333": {
+        "currentTeamId": 3,
+        "name": "Libor Hajek",
+        "jersey": "25",
+        "position": "D"
+    },
+    "8479364": {
+        "currentTeamId": 3,
+        "name": "Tim Gettinger",
+        "jersey": "26",
+        "position": "LW"
+    },
+    "8480078": {
+        "currentTeamId": 3,
+        "name": "Filip Chytil",
+        "jersey": "72",
+        "position": "C"
+    },
+    "8480382": {
+        "currentTeamId": 3,
+        "name": "Alexandar Georgiev",
+        "jersey": "40",
+        "position": "G"
+    },
+    "8480817": {
+        "currentTeamId": 3,
+        "name": "K'Andre Miller",
+        "jersey": "79",
+        "position": "D"
+    },
+    "8480878": {
+        "currentTeamId": 3,
+        "name": "Nils Lundkvist",
+        "jersey": "27",
+        "position": "D"
+    },
+    "8480986": {
+        "currentTeamId": 3,
+        "name": "Lauri Pajuniemi",
+        "jersey": "49",
+        "position": "RW"
+    },
+    "8481525": {
+        "currentTeamId": 3,
+        "name": "Matthew Robertson",
+        "jersey": "44",
+        "position": "D"
+    },
+    "8481554": {
+        "currentTeamId": 3,
+        "name": "Kaapo Kakko",
+        "jersey": "24",
+        "position": "RW"
+    },
+    "8481708": {
+        "currentTeamId": 3,
+        "name": "Zac Jones",
+        "jersey": "6",
+        "position": "D"
+    },
+    "8482073": {
+        "currentTeamId": 3,
+        "name": "Braden Schneider",
+        "jersey": "45",
+        "position": "D"
+    },
+    "8482109": {
+        "currentTeamId": 3,
+        "name": "Alexis Lafrenière",
+        "jersey": "13",
+        "position": "LW"
+    }
+}
