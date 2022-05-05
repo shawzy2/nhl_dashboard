@@ -19,13 +19,17 @@
   </li>
   
 
+  <!-- print out selections DELETE LATER -->
   <div>{{selectedTeam.id}}</div> 
   <div>{{selectedTeam.name}}</div> 
   <div>{{selectedGameId}}</div> 
 
   <!-- dashboard data -->
   <mat-grid-list cols="2" rowHeight="350px">
-    <mat-grid-tile *ngFor="let card of cards | async" [colspan]="card.cols" [rowspan]="card.rows">
+
+    <app-line-stats></app-line-stats>
+
+    <!-- <mat-grid-tile *ngFor="let card of cards | async" [colspan]="card.cols" [rowspan]="card.rows">
       <mat-card class="dashboard-card">
         <mat-card-header>
           <mat-card-title>
@@ -43,6 +47,6 @@
           <div>Card Content Here</div>
         </mat-card-content>
       </mat-card>
-    </mat-grid-tile>
+    </mat-grid-tile> -->
   </mat-grid-list>
 </div>
