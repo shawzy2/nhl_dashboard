@@ -5,3 +5,8 @@ numpy
 matplotlib
 scipy
 sklearn
+fastapi
+"uvicorn[standard]"
+python-multipart 
+sqlalchemy
+jinja2
