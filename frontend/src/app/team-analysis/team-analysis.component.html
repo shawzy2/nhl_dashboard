@@ -5,13 +5,13 @@
   <li class="mat-form-field--inline">
     <mat-form-field appearance="outline">
       <mat-label>Select a Team</mat-label>
-      <mat-select [(value)]="selectedTeam">
+      <mat-select [(value)]="selectedTeam" (selectionChange)="changeSelectedTeam($event.value)">
         <mat-option *ngFor="let team of teams" [value]="team"> {{team.name}} </mat-option>
       </mat-select>
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>Select a Game</mat-label>
-      <mat-select [(value)]="selectedGameId">
+      <mat-select [(value)]="selectedGameId" (selectionChange)="changeSelectedGameId($event.value)">
         <mat-option *ngFor="let gameId of gameIds" [value]="gameId"> {{gameId}} </mat-option>
       </mat-select>
     </mat-form-field>
@@ -23,11 +23,14 @@
   <div>{{selectedTeam.id}}</div> 
   <div>{{selectedTeam.name}}</div> 
   <div>{{selectedGameId}}</div> 
+  <!-- <div> {{lineStats | json}} </div>  -->
 
   <!-- dashboard data -->
   <mat-grid-list cols="2" rowHeight="350px">
 
-    <app-line-stats></app-line-stats>
+    <!-- <app-line-stats [dataSource]="lineStats"></app-line-stats> -->
+    <app-line-stats [lineStats]="lineStats"></app-line-stats>
+
 
     <!-- <mat-grid-tile *ngFor="let card of cards | async" [colspan]="card.cols" [rowspan]="card.rows">
       <mat-card class="dashboard-card">

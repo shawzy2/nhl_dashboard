@@ -15,6 +15,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
 
+# import shot data
 df = pd.read_json('data/shotSample.json', dtype={
     'awayFwdIds': 'str',
     'awayDefIds': 'str',
@@ -25,13 +26,21 @@ df = pd.read_json('data/shotSample.json', dtype={
 })
 df.to_sql(name='shots', con=engine, if_exists='replace', index=False)
 
-# with open('data/shotSample.json') as f:
-#     shots = json.load(f)
+# import shift data
+df = pd.read_json('data/shiftSample.json', dtype={
+    'lineId': 'str'
+})
+df.to_sql(name='shifts', con=engine, if_exists='replace', index=False)
 
-# for i in range(0, len(shots)):
-#     SessionLocal.add(models.Shot(**{
-#         'shotId': i,
-#         'gameId': shots[i]['gameId'],
-#         'shooterId': shots[i]['shooterId']
-#     }))
+# import roster data
+df = pd.read_json('data/rosterSample.json')
+df.to_sql(name='rosters', con=engine, if_exists='replace', index=False)
+
+# import schedule data
+df = pd.read_json('data/scheduleSample.json')
+df.to_sql(name='schedules', con=engine, if_exists='replace', index=False)
+
+# import team data
+df = pd.read_json('data/teamsSample.json')
+df.to_sql(name='teams', con=engine, if_exists='replace', index=False)
 
