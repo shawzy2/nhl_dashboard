@@ -6,26 +6,27 @@ def get_team_analysis(db, teamId, gameId):
     result = db.execute(
         f"""
         WITH lineShots AS (
-            SELECT  gameId, teamId, homeTeamId, type,
+            SELECT  gameId, teamId, homeTeamId, type, xgoals,
                     CASE WHEN teamId = homeTeamId THEN homeFwdIds ELSE awayFwdIds END as lineCf,
                     CASE WHEN teamId = homeTeamId THEN awayFwdIds ELSE homeFwdIds END as lineCa
             FROM (
-                SELECT gameId, teamId, type, (
-                        SELECT homeTeamId FROM schedules
+                SELECT gameId, teamId, type,  (
+                        SELECT homeTeamId 
+                        FROM schedules
                         WHERE gameId={gameId}
-                    ) as homeTeamId, awayFwdIds, awayDefIds, homeFwdIds, homeDefIds
+                    ) as homeTeamId, awayFwdIds, awayDefIds, homeFwdIds, homeDefIds, xgoals
                 FROM shots
                 WHERE gameId={gameId} AND scenario='5on5'
             )
         ),
         corsiFor AS (
-            SELECT lineCf, COUNT(*) as cf
+            SELECT lineCf, COUNT(*) as cf, SUM(xgoals) as xgf
             FROM lineShots
             WHERE gameId={gameId} AND teamId={teamId}
             GROUP BY lineCf
         ),
         corsiAgainst AS (
-            SELECT lineCA, COUNT(*) as ca
+            SELECT lineCA, COUNT(*) as ca, SUM(xgoals) as xga
             FROM lineShots
             WHERE gameId={gameId} AND teamId!={teamId}
             GROUP BY lineCa
@@ -38,10 +39,10 @@ def get_team_analysis(db, teamId, gameId):
         )
         
         SELECT * FROM (
-            SELECT lineCf AS lineId, minutesPlayed.mp as mp, cf, corsiAgainst.ca as ca
+            SELECT lineCf AS lineId, minutesPlayed.mp as mp, cf, corsiAgainst.ca as ca, xgf, corsiAgainst.xga as xga
             FROM corsiFor
             LEFT JOIN (
-                SELECT lineCa, ca
+                SELECT lineCa, ca, xga
                 FROM corsiAgainst
             ) AS corsiAgainst ON lineCf=corsiAgainst.lineCa
             LEFT JOIN (
@@ -55,6 +56,7 @@ def get_team_analysis(db, teamId, gameId):
 
     # now convert lineId to individual players and names
     lines = [row for row in result]
+    # return lines
     all_playerIds = set()
     for line in lines:
         for playerId in line['lineId'].split('_'):
@@ -101,6 +103,11 @@ def get_team_analysis(db, teamId, gameId):
         ca = 0
         if line['cf'] is not None: cf = line['cf']
         if line['ca'] is not None: ca = line['ca']
+
+        xgf = 0
+        xga = 0
+        if line['xgf'] is not None: xgf = round(line['xgf'], 2)
+        if line['xga'] is not None: xga = round(line['xga'], 2)
         try:
             final.append({
                 'name': f'fwd{i}',
@@ -115,9 +122,9 @@ def get_team_analysis(db, teamId, gameId):
                 'cf': cf,
                 'ca': ca,
                 'cr': cf - ca,
-                'xgf': 0,
-                'xga': 0,
-                'xgr': 0
+                'xgf': xgf,
+                'xga': xga,
+                'xgr': round(xgf - xga, 2)
             })
             i += 1
         except:

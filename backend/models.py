@@ -28,6 +28,7 @@ class Shot(Base):
     homeDefIds = Column(String(20))
     homeGoalieIds = Column(String(10))
     scenario = Column(String(10))
+    xgoals = Column(Float)
 
 '''TODO look into multi column keys'''
 class Shift(Base):
