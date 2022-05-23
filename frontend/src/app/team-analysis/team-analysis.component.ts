@@ -12,6 +12,16 @@ interface Game {
   date: string
 }
 
+interface Team {
+  id: number,
+  name: string
+}
+
+interface Division {
+  divisionName: string,
+  teams: Team[]
+}
+
 @Component({
   selector: 'app-team-analysis',
   templateUrl: './team-analysis.component.html',
@@ -21,23 +31,20 @@ export class TeamAnalysisComponent {
   @Input() selectedTeam = { name: 'NHL',   id: '0' }
   @Input() selectedGameId = 0
 
-  teams = [
-    { name: 'Anaheim Ducks',   id: '24' },
-    { name: 'Arizona Coyotes', id: '53' },
-    { name: 'Boston Bruins',   id: '6' },
-    { name: 'Pittsburgh Penguins',   id: '5' },
-    { name: 'New York Rangers',   id: '3' }
-  ]
+  teams: Team[] = [];
+  divisions: Division[] = []
   games: Game[] = [];
   lineStats: LineStatsItem[] = []; 
 
   ngOnInit() {
-    // var url = `http://localhost:8000/team-analysis/${this.selectedTeam.id}/${this.selectedGameId}`
-    // this.http.get<any>(url).subscribe(
-    //   response => {
-    //     this.lineStats = response as LineStatsItem[];
-    //   }
-    // )
+    // update 'Select a Team' selector
+    var url = `http://localhost:8000/teams/division`
+    this.http.get<any>(url).subscribe(
+      response => {
+        this.divisions = response as Division[]
+        console.log(this.divisions)
+      }
+    )
   }
 
   changeSelectedTeam(selectedTeam: any) {

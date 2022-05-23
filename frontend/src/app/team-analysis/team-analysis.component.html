@@ -5,8 +5,10 @@
   <li class="mat-form-field--inline">
     <mat-form-field appearance="outline">
       <mat-label>Select a Team</mat-label>
-      <mat-select [(value)]="selectedTeam" (selectionChange)="changeSelectedTeam($event.value)">
-        <mat-option *ngFor="let team of teams" [value]="team"> {{team.name}} </mat-option>
+      <mat-select [(value)]="selectedTeam" (selectionChange)="changeSelectedTeam($event)">
+        <mat-optgroup *ngFor="let division of divisions" [label]="division.divisionName">
+          <mat-option *ngFor="let team of division.teams" [value]="team"> {{team.name}} </mat-option>
+        </mat-optgroup>
       </mat-select>
     </mat-form-field>
     <mat-form-field appearance="outline">
@@ -25,7 +27,6 @@
   <div>{{selectedTeam.id}}</div> 
   <div>{{selectedTeam.name}}</div> 
   <div>{{selectedGameId}}</div> 
-  <!-- <div> {{lineStats | json}} </div>  -->
 
   <!-- dashboard data -->
   <mat-grid-list cols="2" rowHeight="350px">

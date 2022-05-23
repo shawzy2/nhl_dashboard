@@ -49,3 +49,7 @@
   margin-right: auto;
   text-align: center;
 }
+
+::ng-deep .mat-select-panel {
+  max-height: 80vh !important;
+}

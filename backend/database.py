@@ -41,6 +41,6 @@ df = pd.read_json('data/scheduleSample.json')
 df.to_sql(name='schedules', con=engine, if_exists='replace', index=False)
 
 # import team data
-df = pd.read_json('data/teamsSample.json')
+df = pd.read_json('data/teamsCurrent.json')
 df.to_sql(name='teams', con=engine, if_exists='replace', index=False)
 

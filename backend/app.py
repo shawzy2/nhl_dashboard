@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import or_
 
 import models
-from  services import teamAnalysis, schedule
+from  services import teamAnalysis, schedule, team
 from database import SessionLocal, engine
 
 models.Base.metadata.create_all(bind=engine)
@@ -49,6 +49,10 @@ def home(request: Request, db: Session = Depends(get_db)):
 def get_roster(request: Request, teamId: int, db: Session = Depends(get_db)):
     # q1 = Request.query_params.get('q1')
     return db.query(models.Roster).filter(models.Roster.teamId == teamId).all()
+
+@app.get("/teams/division")
+def get_teams(request: Request, db: Session = Depends(get_db)):
+    return team.get_teams_by_division(db)
 
 
 @app.get("/rosters/player/{playerId}")
