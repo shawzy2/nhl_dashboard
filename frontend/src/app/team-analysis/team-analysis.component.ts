@@ -5,6 +5,13 @@ import { NONE_TYPE } from '@angular/compiler';
 import { HttpClient } from '@angular/common/http';
 import { LineStatsItem } from '../line-stats/line-stats-datasource';
 
+interface Game {
+  id: number,
+  homeTeam: string,
+  awayTeam: string,
+  date: string
+}
+
 @Component({
   selector: 'app-team-analysis',
   templateUrl: './team-analysis.component.html',
@@ -21,36 +28,39 @@ export class TeamAnalysisComponent {
     { name: 'Pittsburgh Penguins',   id: '5' },
     { name: 'New York Rangers',   id: '3' }
   ]
-  gameIds = [2021020001, 2021020002, 2021030143];
-
+  games: Game[] = [];
   lineStats: LineStatsItem[] = []; 
 
   ngOnInit() {
-    var url = `http://localhost:8000/team-analysis/${this.selectedTeam.id}/${this.selectedGameId}`
-    this.http.get<any>(url).subscribe(
-      response => {
-        console.log(response);
-        this.lineStats = response as LineStatsItem[];
-        console.log(this.lineStats);
-      }
-    )
+    // var url = `http://localhost:8000/team-analysis/${this.selectedTeam.id}/${this.selectedGameId}`
+    // this.http.get<any>(url).subscribe(
+    //   response => {
+    //     this.lineStats = response as LineStatsItem[];
+    //   }
+    // )
   }
 
   changeSelectedTeam(selectedTeam: any) {
     console.log(selectedTeam.id);
+    // reset selector vals
+    this.selectedGameId = 0;
+    this.lineStats = [];
+
+    // update 'Select a Game' selector
+    var url = `http://localhost:8000/schedule/${this.selectedTeam.id}`
+    this.http.get<any>(url).subscribe(
+      response => {
+        this.games = response as Game[]
+      }
+    )
   }
 
   changeSelectedGameId(selectedGameId: any) {
-    console.log(selectedGameId);
-    console.log('updating data')
-
-    // update data on page
+    // update lineStats data
     var url = `http://localhost:8000/team-analysis/${this.selectedTeam.id}/${this.selectedGameId}`
     this.http.get<any>(url).subscribe(
       response => {
-        console.log(response);
         this.lineStats = response as LineStatsItem[];
-        console.log(this.lineStats);
       }
     )
   }

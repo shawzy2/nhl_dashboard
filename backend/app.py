@@ -6,9 +6,10 @@ from starlette.responses import JSONResponse, RedirectResponse
 from starlette.templating import Jinja2Templates
 
 from sqlalchemy.orm import Session
+from sqlalchemy import or_
 
 import models
-from teamAnalysis import services
+from  services import teamAnalysis, schedule
 from database import SessionLocal, engine
 
 models.Base.metadata.create_all(bind=engine)
@@ -54,12 +55,14 @@ def get_roster(request: Request, teamId: int, db: Session = Depends(get_db)):
 def get_player(request: Request, playerId: int, db: Session = Depends(get_db)):
     return db.query(models.Roster).filter(models.Roster.playerId == playerId).all()
 
+@app.get("/schedule/{teamId}")
+def get_schedule(request: Request, teamId: int, db: Session = Depends(get_db)):
+    return schedule.get_team_schedule(db, teamId)
+
 
 @app.get("/team-analysis/{teamId}/{gameId}")
 def get_team_analysis(request: Request, teamId: int, gameId: int, db: Session = Depends(get_db)):
-    # result = db.execute(services.GET_TEAM_ANAYSIS_QUERY)
-    # return [row for row in result]
-    return services.get_team_analysis(db, teamId, gameId)
+    return teamAnalysis.get_team_analysis(db, teamId, gameId)
 
 
 # @app.get("/teamAnalysis/corsi/{gameId}/{teamId}")

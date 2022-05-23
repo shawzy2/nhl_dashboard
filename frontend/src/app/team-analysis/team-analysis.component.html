@@ -12,7 +12,9 @@
     <mat-form-field appearance="outline">
       <mat-label>Select a Game</mat-label>
       <mat-select [(value)]="selectedGameId" (selectionChange)="changeSelectedGameId($event.value)">
-        <mat-option *ngFor="let gameId of gameIds" [value]="gameId"> {{gameId}} </mat-option>
+        <mat-option *ngFor="let game of games" [value]="game.id">
+          {{ game.date }}: {{ game.awayTeam }} at {{ game.homeTeam }}
+        </mat-option>
       </mat-select>
     </mat-form-field>
     <img src="../../assets/logos/{{selectedTeam.id}}.svg" alt="Logo" width="200" height="80">
@@ -28,7 +30,14 @@
   <!-- dashboard data -->
   <mat-grid-list cols="2" rowHeight="350px">
 
-    <app-line-stats [lineStats]="lineStats"></app-line-stats>
+    <div *ngIf="selectedGameId==0; else viewStats" class="please-select-gameId">
+      <img src="../../assets/logos/{{selectedTeam.id}}.svg" alt="Logo">
+      <h2> Please Select Game </h2>
+    </div>
+    <ng-template #viewStats>
+      <app-line-stats [lineStats]="lineStats"></app-line-stats>
+    </ng-template>
+    
 
 
     <!-- <mat-grid-tile *ngFor="let card of cards | async" [colspan]="card.cols" [rowspan]="card.rows">

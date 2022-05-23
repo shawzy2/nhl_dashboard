@@ -1,7 +1,7 @@
 from sqlite3 import Date
-from xmlrpc.client import DateTime
+# from xmlrpc.client import DateTime
 from numpy import integer
-from sqlalchemy import Boolean, Column, Float, Integer, String
+from sqlalchemy import Boolean, Column, Float, Integer, String, DateTime
 
 from database import Base
 
@@ -65,7 +65,7 @@ class Schedule(Base):
     __tablename__ = "schedules"
 
     gameId = Column(Integer, primary_key=True, index=True)
-    # dateTime = Column(DateTime)
+    dateTime = Column(DateTime)
     awayTeamId = Column(Integer)
     homeTeamId = Column(Integer)
 
