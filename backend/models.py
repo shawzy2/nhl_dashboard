@@ -9,15 +9,14 @@ from database import Base
 class Shot(Base):
     __tablename__ = "shots"
     
-    shotId = Column(Integer, primary_key=True, index=True)
-    gameId = Column(Integer)
+    gameId = Column(Integer, primary_key=True)
     shooterId = Column(Integer)
     goalieId = Column(Integer)
     blockerId = Column(Integer)
     teamId = Column(Integer)
     x = Column(Float)
     y = Column(Float)
-    time = Column(Integer)
+    time = Column(Integer, primary_key=True)
     type = Column(String(20))
     awayNumPlayers = Column(Integer)
     awayFwdIds = Column(String(30))
@@ -48,6 +47,7 @@ class Roster(Base):
     __tablename__ = "rosters"
 
     playerId = Column(Integer, primary_key=True, index=True)
+    birthDate = Column(DateTime)
     firstName = Column(String(20))
     lastName = Column(String(20))
     primaryNumber = Column(Integer)
@@ -60,7 +60,6 @@ class Roster(Base):
     teamId = Column(Integer)
     position = Column(String(5))
 
-'''TODO fix dateTime column'''
 class Schedule(Base):
     __tablename__ = "schedules"
 
@@ -68,6 +67,8 @@ class Schedule(Base):
     dateTime = Column(DateTime)
     awayTeamId = Column(Integer)
     homeTeamId = Column(Integer)
+    awayTeamScore = Column(Integer)
+    homeTeamScore = Column(Integer)
 
 class Team(Base):
     __tablename__ = "teams"
