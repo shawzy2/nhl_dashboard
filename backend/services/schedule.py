@@ -16,7 +16,8 @@ def get_team_schedule(db, teamId):
             SELECT teamId, teamName
             FROM teams
         )
-        SELECT gameId as id, 
+        SELECT gameId, 
+            awayTeamId,
             t1.teamName AS awayTeam, 
             t2.teamName as homeTeam,
             strftime('%m-%d', dateTime) as date
@@ -29,4 +30,22 @@ def get_team_schedule(db, teamId):
     # convert to object
     games = [row for row in result]
     
-    return games
+    final = []
+    for game in games:
+        # first assume the team is playing a home game
+        opp_team = game['awayTeam']
+        prefix = 'vs '
+        
+        # check if team is actually playing an away game
+        if game['awayTeamId'] == teamId:
+            opp_team = game['homeTeam']
+            prefix = '@ '
+        
+        # build string that will appear in dropdown menu
+        final.append({
+            'gameId': game['gameId'],
+            'date': game['date'],
+            'opponent': prefix + opp_team
+        })
+    
+    return final

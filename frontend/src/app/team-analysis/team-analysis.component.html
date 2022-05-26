@@ -14,8 +14,8 @@
     <mat-form-field appearance="outline">
       <mat-label>Select a Game</mat-label>
       <mat-select [(value)]="selectedGameId" (selectionChange)="changeSelectedGameId($event.value)">
-        <mat-option *ngFor="let game of games" [value]="game.id">
-          {{ game.date }}: {{ game.awayTeam }} at {{ game.homeTeam }}
+        <mat-option *ngFor="let game of games" [value]="game.gameId">
+          {{ game.date }}: {{ game.opponent }}
         </mat-option>
       </mat-select>
     </mat-form-field>

@@ -6,10 +6,9 @@ import { HttpClient } from '@angular/common/http';
 import { LineStatsItem } from '../line-stats/line-stats-datasource';
 
 interface Game {
-  id: number,
-  homeTeam: string,
-  awayTeam: string,
-  date: string
+  gameId: number,
+  date: string,
+  opponent: string
 }
 
 interface Team {
