@@ -37,6 +37,13 @@ export class TeamAnalysisComponent {
 
   gameSummary: any = [
     {
+      'statName': 'Expected Goals',
+      'statValueTeam1': 2.22,
+      'statValueTeam2': 1.87,
+      'statColorTeam1': '#CC0000',
+      'statColorTeam2': '#0038A8'
+    },
+    {
       'statName': 'Shots on Goal',
       'statValueTeam1': 28,
       'statValueTeam2': 21,
@@ -51,22 +58,22 @@ export class TeamAnalysisComponent {
       'statColorTeam2': '#0038A8'
     },
     {
-      'statName': 'Expected Goals',
-      'statValueTeam1': 2.22,
-      'statValueTeam2': 1.87,
+      'statName': 'Faceoff Wins',
+      'statValueTeam1': 34,
+      'statValueTeam2': 33,
       'statColorTeam1': '#CC0000',
       'statColorTeam2': '#0038A8'
     },
     {
       'statName': 'PowerPlays',
-      'statValueTeam1': '1/4',
-      'statValueTeam2': '0/4',
+      'statValueTeam1': '0/3',
+      'statValueTeam2': '2/4',
       'statColorTeam1': '#CC0000',
       'statColorTeam2': '#0038A8'
     },
     {
       'statName': 'PIM',
-      'statValueTeam1': 8,
+      'statValueTeam1': 17,
       'statValueTeam2': 6,
       'statColorTeam1': '#CC0000',
       'statColorTeam2': '#0038A8'

@@ -17,23 +17,23 @@ export class TeamAnalysisGameSummaryComponent implements OnInit {
   setStyleLeftBar(s: any) {
     let val1 = eval(s.statValueTeam1);
     let val2 = eval(s.statValueTeam2);
-    let width = Math.min((val1 / (val1 + val2)) * 40 - 0.25, 39.5);
+    let width = (val1 / (val1 + val2)) * 100 - 0.25;
     
     // if statistics are equal, set both bars to be the same width
     if (val1 == 0 && val2 == 0) {
-      width = 39.5 / 2;
+      width = 99.5 / 2;
     }
 
     // if the other statistic is zero, set this bar to be the full width
     if (val2 == 0) {
-      width = 40;
+      width = 100;
     }
 
     let styles = {
       'border-bottom': '2px solid', 
       'border-color': s.statColorTeam1, 
       'border-radius': '12px', 
-      'width': width + 'vw',
+      'width': width + '%',
       'display': 'inline-block'
     };
     return styles;
@@ -48,7 +48,7 @@ export class TeamAnalysisGameSummaryComponent implements OnInit {
     }
 
     let styles = {
-      'width': width + 'vw',
+      'width': width + '%',
       'display': 'inline-block'
     }
     return styles;
@@ -57,23 +57,23 @@ export class TeamAnalysisGameSummaryComponent implements OnInit {
   setStyleRightBar(s: any) {
     let val1 = eval(s.statValueTeam1);
     let val2 = eval(s.statValueTeam2);
-    let width = Math.min((val2 / (val1 + val2)) * 40 - 0.25, 39.5);
+    let width = (val2 / (val1 + val2)) * 100 - 0.25;
 
     // if statistics are equal, set both bars to be the same width
     if (val1 == 0 && val2 == 0) {
-      width = 39.5 / 2;
+      width = 99.5 / 2;
     }
 
     // if the other statistic is zero, set this bar to be the full width
     if (val1 == 0) {
-      width = 40;
+      width = 100;
     }
 
     let styles = {
       'border-bottom': '2px solid', 
       'border-color': s.statColorTeam2, 
       'border-radius': '12px', 
-      'width': width  + 'vw',
+      'width': width  + '%',
       'display': 'inline-block'
     };
     return styles;

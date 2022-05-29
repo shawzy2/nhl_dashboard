@@ -52,7 +52,7 @@
 }
 
 .team-logo {
-    height: 5vh;
+    height: 3vw;
 }
 
 .score-text {
@@ -65,6 +65,16 @@
     font-family: Arial, Helvetica, sans-serif;
     // font-weight: bold;
 }
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1em 0;
+    padding: 0;
+}
+
 .row-proportion-bar-outer {
     text-align: center;
 }

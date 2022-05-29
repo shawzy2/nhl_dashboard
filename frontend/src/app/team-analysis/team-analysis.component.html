@@ -1,33 +1,59 @@
 <div class="grid-container">
   <h1 class="mat-h1">Dashboard</h1>
 
-  <!-- query params -->
-  <li class="mat-form-field--inline">
-    <mat-form-field appearance="outline">
-      <mat-label>Select a Team</mat-label>
-      <mat-select [(value)]="selectedTeam" (selectionChange)="changeSelectedTeam($event)">
-        <mat-optgroup *ngFor="let division of divisions" [label]="division.divisionName">
-          <mat-option *ngFor="let team of division.teams" [value]="team"> {{team.name}} </mat-option>
-        </mat-optgroup>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>Select a Game</mat-label>
-      <mat-select [(value)]="selectedGameId" (selectionChange)="changeSelectedGameId($event.value)">
-        <mat-option *ngFor="let game of games" [value]="game.gameId">
-          {{ game.date }}: {{ game.opponent }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <img src="../../assets/logos/{{selectedTeam.id}}.svg" alt="Logo" width="200" height="80">
-  </li>
+
+  <mat-grid-list cols="5" rowHeight="120px" gutterSize="-15px">
+    <!-- query params -->
+    <mat-grid-tile [colspan]="3" [rowspan]="1">
+      <mat-card class="dashboard-card">
+        <li class="mat-form-field--inline">
+          <mat-form-field appearance="outline">
+            <mat-label>Select a Team</mat-label>
+            <mat-select [(value)]="selectedTeam" (selectionChange)="changeSelectedTeam($event)">
+              <mat-optgroup *ngFor="let division of divisions" [label]="division.divisionName">
+                <mat-option *ngFor="let team of division.teams" [value]="team"> {{team.name}} </mat-option>
+              </mat-optgroup>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Select a Game</mat-label>
+            <mat-select [(value)]="selectedGameId" (selectionChange)="changeSelectedGameId($event.value)">
+              <mat-option *ngFor="let game of games" [value]="game.gameId">
+                {{ game.date }}: {{ game.opponent }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </li>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-grid-tile [colspan]="2" [rowspan]="5">
+    <mat-card class="dashboard-card">
+      <app-team-analysis-game-summary [gameSummary]="gameSummary"></app-team-analysis-game-summary>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-grid-tile [colspan]="3" [rowspan]="4">
+    <mat-card class="dashboard-card">
+      placeholder for gameflow
+    </mat-card>
+  </mat-grid-tile>
+
+  <!-- <mat-grid-tile colspan]="1" [rowspan]="1">
+    <mat-card class="dashboard-card">
+      hello
+    <app-team-analysis-game-summary [gameSummary]="gameSummary"></app-team-analysis-game-summary>
+    </mat-card>
+  </mat-grid-tile> -->
+</mat-grid-list>
+
+<!-- </div> -->
   
 
   <!-- print out selections DELETE LATER -->
-  <div>{{selectedTeam.id}}</div> 
+  <!-- <div>{{selectedTeam.id}}</div> 
   <div>{{selectedTeam.name}}</div> 
-  <div>{{selectedGameId}}</div> 
-  <app-team-analysis-game-summary [gameSummary]="gameSummary"></app-team-analysis-game-summary>
+  <div>{{selectedGameId}}</div>  -->
 
   <!-- dashboard data -->
   <mat-grid-list cols="2" rowHeight="350px">
