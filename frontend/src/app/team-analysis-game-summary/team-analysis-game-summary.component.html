@@ -1,0 +1,47 @@
+<p>team-analysis-game-summary works!</p>
+<p>yoooo</p>
+<div fxLayoutAlign="start start">
+    <mat-card class="dashboard-card">
+        <mat-card-content class="dashboard-card-content">
+        <div>
+            <!-- final score row -->
+            <div class="header">
+                <div class="logo-score-left">
+                    <img src="../../assets/logos/12.svg" alt="Logo" class="team-logo">
+                    <span class="score-text">&nbsp;2</span>
+                </div>
+                <p>Final / End Regulation</p>
+                <div class="logo-score-right">
+                    <span class="score-text">0&nbsp;</span>
+                    <img src="../../assets/logos/3.svg" alt="Logo" class="team-logo">
+                </div>
+            </div>
+
+            <hr/>
+
+            <!-- stats rows -->
+            <div *ngFor="let statistic of gameSummary" class="row">
+                <div class="row-statistic">
+                    <div class="logo-score-left"><span class="stat-text">{{statistic.statValueTeam1}}</span></div>
+                    <p>{{statistic.statName}}</p>
+                    <div class="logo-score-right"><span class="stat-text">{{statistic.statValueTeam2}}</span></div>
+                </div>
+                <div class="row-proportion-bar-outer">
+                    <div [ngStyle]="setStyleLeftBar(statistic)"></div>
+                    <div [ngStyle]="setStyleMidBar(statistic)"></div>
+                    <div [ngStyle]="setStyleRightBar(statistic)"></div>
+                </div>
+            </div>
+
+            
+
+        </div>
+        </mat-card-content>
+    </mat-card>
+</div>
+
+
+
+<!-- <div class="team-logo-left"><img src="../../assets/logos/12.svg" alt="Logo"></div>
+<div> content </div>
+<div class="team-logo-right"><img src="../../assets/logos/3.svg" alt="Logo"></div> -->

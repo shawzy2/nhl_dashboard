@@ -23,13 +23,15 @@ import { MatSortModule } from '@angular/material/sort';
 import {MatTooltipModule} from '@angular/material/tooltip';
 
 import { HttpClientModule } from '@angular/common/http';
+import { TeamAnalysisGameSummaryComponent } from './team-analysis-game-summary/team-analysis-game-summary.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavComponent,
     TeamAnalysisComponent,
-    LineStatsComponent
+    LineStatsComponent,
+    TeamAnalysisGameSummaryComponent
   ],
   imports: [
     BrowserModule,

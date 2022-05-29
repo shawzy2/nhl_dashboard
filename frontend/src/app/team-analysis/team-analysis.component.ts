@@ -35,6 +35,44 @@ export class TeamAnalysisComponent {
   games: Game[] = [];
   lineStats: LineStatsItem[] = []; 
 
+  gameSummary: any = [
+    {
+      'statName': 'Shots on Goal',
+      'statValueTeam1': 28,
+      'statValueTeam2': 21,
+      'statColorTeam1': '#CC0000',
+      'statColorTeam2': '#0038A8'
+    },
+    {
+      'statName': 'Corsi',
+      'statValueTeam1': 53,
+      'statValueTeam2': 44,
+      'statColorTeam1': '#CC0000',
+      'statColorTeam2': '#0038A8'
+    },
+    {
+      'statName': 'Expected Goals',
+      'statValueTeam1': 2.22,
+      'statValueTeam2': 1.87,
+      'statColorTeam1': '#CC0000',
+      'statColorTeam2': '#0038A8'
+    },
+    {
+      'statName': 'PowerPlays',
+      'statValueTeam1': '1/4',
+      'statValueTeam2': '0/4',
+      'statColorTeam1': '#CC0000',
+      'statColorTeam2': '#0038A8'
+    },
+    {
+      'statName': 'PIM',
+      'statValueTeam1': 8,
+      'statValueTeam2': 6,
+      'statColorTeam1': '#CC0000',
+      'statColorTeam2': '#0038A8'
+    }
+  ]
+
   ngOnInit() {
     // update 'Select a Team' selector
     var url = `http://localhost:8000/teams/division`
