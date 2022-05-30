@@ -1,4 +1,5 @@
 from sqlite3 import Date
+from tokenize import Number
 # from xmlrpc.client import DateTime
 from numpy import integer
 from sqlalchemy import Boolean, Column, Float, Integer, String, DateTime
@@ -85,5 +86,48 @@ class Team(Base):
     timezone = Column(String(5))
     primaryColor = Column(String(8))
     secondaryColor = Column(String(8))
+
+class Faceoff(Base):
+    __tablename__ = "faceoffs"
+
+    gameId = Column(Integer, primary_key=True, index=True)
+    time = Column(Integer, primary_key=True, index=True)
+    playerWinId = Column(Integer)
+    playerLoseId = Column(Integer)
+    teamWinId = Column(Integer)
+    x = Column(Float)
+    y = Column(Float)
+
+class Penalty(Base):
+    __tablename__ = "penalties"
+
+    gameId = Column(Integer, primary_key=True, index=True)
+    time = Column(Integer, primary_key=True, index=True)
+    penaltyOnId = Column(Integer)
+    penaltyDrewById = Column(Integer)
+    teamWinId = Column(Integer)
+    x = Column(Float)
+    y = Column(Float)
+    pim = Column(Integer)
+    severity = Column(String)
+    type = Column(String, primary_key=True, index=True)
+
+class Boxscore(Base):
+    __tablename__ = "boxscores"
+
+    gameId = Column(Integer, primary_key=True, index=True)
+    teamId = Column(Integer, primary_key=True, index=True)
+    isHome = Column(Boolean)
+    goals = Column(Integer)
+    pim = Column(Integer)
+    shots = Column(Integer)
+    powerPlayPercentage = Column(Float)
+    powerPlayGoals = Column(Integer)
+    powerPlayOpportunities = Column(Integer)
+    faceOffWinPercentage = Column(Float)
+    blocked = Column(Integer)
+    takeaways = Column(Integer)
+    giveaways = Column(Integer)
+    hits = Column(Integer)
 
 # schemas?

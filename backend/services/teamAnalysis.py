@@ -136,22 +136,10 @@ def get_team_analysis_summary(db, gameId):
     result = db.execute(
         f"""
         WITH game AS (
-            SELECT gameId, awayTeamId, homeTeamId, awayTeamScore, homeTeamScore
-            FROM schedules
+            SELECT teamId, isHome, goals, pim, 
+                powerPlayGoals || '/' || powerPlayOpportunities as ppStr
+            FROM boxscores
             WHERE gameId={gameId}
-        ),
-        home AS (
-            SELECT homeTeamId AS teamId, homeTeamScore AS goals, TRUE AS isHome
-            FROM game
-        ),
-        away AS (
-            SELECT AWAYTeamId AS teamId, AWAYTeamScore AS goals, FALSE AS isHome
-            FROM game
-        ),
-        bothTeams AS (
-            SELECT * FROM away
-            UNION ALL
-            SELECT * FROM home
         ),
         allTeams AS (
             SELECT teamId, primaryColor
@@ -167,14 +155,24 @@ def get_team_analysis_summary(db, gameId):
             FROM shots
             WHERE gameId={gameId}
             GROUP BY teamId
+        ),
+        faceoffStats AS (
+            SELECT teamWinId as teamId, COUNT(*) AS faceoffWins
+            FROM faceoffs
+            WHERE gameId={gameId}
+            GROUP BY teamWinId
         )
-        SELECT * FROM bothTeams
+        SELECT *
+        FROM game
         LEFT JOIN allTeams USING(teamId)
-        LEFT JOIN shotStats USING(teamId);
+        LEFT JOIN shotStats USING(teamId)
+        LEFT JOIN faceoffStats USING(teamId);
         """)
 
     # read data from query
     teams = [row for row in result]
+    # return teams
+
     teams_organized = {}
     for team in teams:
         if team['isHome'] == 1:
@@ -197,7 +195,10 @@ def get_team_analysis_summary(db, gameId):
     stats = {
         'xgf': 'Expected Goals',
         'sog': 'Shots on Goal',
-        'cf': 'Corsi'
+        'cf': 'Corsi',
+        'faceoffWins': 'Faceoff Wins',
+        'ppStr': 'PowerPlays',
+        'pim': 'PIM'
     }
     final['stats'] = [{
         'statName': name,

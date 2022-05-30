@@ -19,13 +19,12 @@ export class TeamAnalysisGameSummaryComponent implements OnInit {
     let val2 = eval(s.statValueTeam2);
     let width = (val1 / (val1 + val2)) * 100 - 0.25;
     
-    // if statistics are equal, set both bars to be the same width
+    
     if (val1 == 0 && val2 == 0) {
+      // if statistics are equal, set both bars to be the same width
       width = 99.5 / 2;
-    }
-
-    // if the other statistic is zero, set this bar to be the full width
-    if (val2 == 0) {
+    } else if (val2 == 0) {
+      // if the other statistic is zero, set this bar to be the full width
       width = 100;
     }
 
@@ -59,13 +58,11 @@ export class TeamAnalysisGameSummaryComponent implements OnInit {
     let val2 = eval(s.statValueTeam2);
     let width = (val2 / (val1 + val2)) * 100 - 0.25;
 
-    // if statistics are equal, set both bars to be the same width
     if (val1 == 0 && val2 == 0) {
+      // if statistics are equal, set both bars to be the same width
       width = 99.5 / 2;
-    }
-
-    // if the other statistic is zero, set this bar to be the full width
-    if (val1 == 0) {
+    } else if (val1 == 0) {
+      // if the other statistic is zero, set this bar to be the full width
       width = 100;
     }
 

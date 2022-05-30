@@ -46,3 +46,14 @@ df.to_sql(name='schedules', con=engine, if_exists='replace', index=False)
 df = pd.read_json('data/teamsCurrent.json')
 df.to_sql(name='teams', con=engine, if_exists='replace', index=False)
 
+# import faceoff data
+df = pd.read_json('data/faceoffCurrent.json')
+df.to_sql(name='faceoffs', con=engine, if_exists='replace', index=False)
+
+# import penalty data
+df = pd.read_json('data/penaltyCurrent.json')
+df.to_sql(name='penalties', con=engine, if_exists='replace', index=False)
+
+# import boxscore data
+df = pd.read_json('data/boxscoreCurrent.json')
+df.to_sql(name='boxscores', con=engine, if_exists='replace', index=False)
