@@ -4,29 +4,29 @@
             <!-- final score row -->
             <div class="header">
                 <div class="logo-score-left">
-                    <img src="../../assets/logos/12.svg" alt="Logo" class="team-logo">
-                    <span class="score-text">&nbsp;2</span>
+                    <img [src]="gameSummary.logoTeam1" alt="Logo" class="team-logo">
+                    <span class="score-text">&nbsp;{{gameSummary.goalsTeam1}}</span>
                 </div>
-                <p>Final / End Regulation</p>
+                <p>Final</p>
                 <div class="logo-score-right">
-                    <span class="score-text">0&nbsp;</span>
-                    <img src="../../assets/logos/3.svg" alt="Logo" class="team-logo">
+                    <span class="score-text">{{gameSummary.goalsTeam2}}&nbsp;</span>
+                    <img [src]="gameSummary.logoTeam2" alt="Logo" class="team-logo">
                 </div>
             </div>
 
             <hr/>
 
             <!-- stats rows -->
-            <div *ngFor="let statistic of gameSummary" class="row">
+            <div *ngFor="let stat of gameSummary.stats" class="row">
                 <div class="row-statistic">
-                    <div class="logo-score-left"><span class="stat-text">{{statistic.statValueTeam1}}</span></div>
-                    <p>{{statistic.statName}}</p>
-                    <div class="logo-score-right"><span class="stat-text">{{statistic.statValueTeam2}}</span></div>
+                    <div class="logo-score-left"><span class="stat-text">{{stat.statValueTeam1}}</span></div>
+                    <p>{{stat.statName}}</p>
+                    <div class="logo-score-right"><span class="stat-text">{{stat.statValueTeam2}}</span></div>
                 </div>
                 <div class="row-proportion-bar-outer">
-                    <div [ngStyle]="setStyleLeftBar(statistic)"></div>
-                    <div [ngStyle]="setStyleMidBar(statistic)"></div>
-                    <div [ngStyle]="setStyleRightBar(statistic)"></div>
+                    <div [ngStyle]="setStyleLeftBar(stat, gameSummary.colorTeam1)"></div>
+                    <div [ngStyle]="setStyleMidBar(stat)"></div>
+                    <div [ngStyle]="setStyleRightBar(stat, gameSummary.colorTeam2)"></div>
                 </div>
             </div>
         </div>

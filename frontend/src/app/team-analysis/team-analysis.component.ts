@@ -30,63 +30,19 @@ export class TeamAnalysisComponent {
   @Input() selectedTeam = { name: 'NHL',   id: '0' }
   @Input() selectedGameId = 0
 
+  directionsMessage: String = 'Please Select Team';
   teams: Team[] = [];
   divisions: Division[] = []
   games: Game[] = [];
   lineStats: LineStatsItem[] = []; 
-
-  gameSummary: any = [
-    {
-      'statName': 'Expected Goals',
-      'statValueTeam1': 2.22,
-      'statValueTeam2': 1.87,
-      'statColorTeam1': '#CC0000',
-      'statColorTeam2': '#0038A8'
-    },
-    {
-      'statName': 'Shots on Goal',
-      'statValueTeam1': 28,
-      'statValueTeam2': 21,
-      'statColorTeam1': '#CC0000',
-      'statColorTeam2': '#0038A8'
-    },
-    {
-      'statName': 'Corsi',
-      'statValueTeam1': 53,
-      'statValueTeam2': 44,
-      'statColorTeam1': '#CC0000',
-      'statColorTeam2': '#0038A8'
-    },
-    {
-      'statName': 'Faceoff Wins',
-      'statValueTeam1': 34,
-      'statValueTeam2': 33,
-      'statColorTeam1': '#CC0000',
-      'statColorTeam2': '#0038A8'
-    },
-    {
-      'statName': 'PowerPlays',
-      'statValueTeam1': '0/3',
-      'statValueTeam2': '2/4',
-      'statColorTeam1': '#CC0000',
-      'statColorTeam2': '#0038A8'
-    },
-    {
-      'statName': 'PIM',
-      'statValueTeam1': 17,
-      'statValueTeam2': 6,
-      'statColorTeam1': '#CC0000',
-      'statColorTeam2': '#0038A8'
-    }
-  ]
+  gameSummary: any = {}
 
   ngOnInit() {
     // update 'Select a Team' selector
     var url = `http://localhost:8000/teams/division`
     this.http.get<any>(url).subscribe(
       response => {
-        this.divisions = response as Division[]
-        console.log(this.divisions)
+        this.divisions = response as Division[];
       }
     )
   }
@@ -94,14 +50,16 @@ export class TeamAnalysisComponent {
   changeSelectedTeam(selectedTeam: any) {
     console.log(selectedTeam.id);
     // reset selector vals
+    this.directionsMessage = 'Please Select Game'
     this.selectedGameId = 0;
     this.lineStats = [];
+    this.gameSummary = {};
 
     // update 'Select a Game' selector
     var url = `http://localhost:8000/schedule/${this.selectedTeam.id}`
     this.http.get<any>(url).subscribe(
       response => {
-        this.games = response as Game[]
+        this.games = response as Game[];
       }
     )
   }
@@ -112,6 +70,14 @@ export class TeamAnalysisComponent {
     this.http.get<any>(url).subscribe(
       response => {
         this.lineStats = response as LineStatsItem[];
+      }
+    )
+
+    // update gameSummary data
+    var url = `http://localhost:8000/team-analysis/${this.selectedTeam.id}/${this.selectedGameId}/summary`
+    this.http.get<any>(url).subscribe(
+      response => {
+        this.gameSummary = response;
       }
     )
   }

@@ -83,5 +83,7 @@ class Team(Base):
     firstYearOfPlay = Column(Integer)
     venue = Column(String(30))
     timezone = Column(String(5))
+    primaryColor = Column(String(8))
+    secondaryColor = Column(String(8))
 
 # schemas?

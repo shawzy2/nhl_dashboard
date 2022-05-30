@@ -3,11 +3,12 @@
 
 
   <mat-grid-list cols="5" rowHeight="120px" gutterSize="-15px">
+
     <!-- query params -->
     <mat-grid-tile [colspan]="3" [rowspan]="1">
       <mat-card class="dashboard-card">
         <li class="mat-form-field--inline">
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" style="width: 40%;">
             <mat-label>Select a Team</mat-label>
             <mat-select [(value)]="selectedTeam" (selectionChange)="changeSelectedTeam($event)">
               <mat-optgroup *ngFor="let division of divisions" [label]="division.divisionName">
@@ -15,7 +16,7 @@
               </mat-optgroup>
             </mat-select>
           </mat-form-field>
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" style="width: 40%;">
             <mat-label>Select a Game</mat-label>
             <mat-select [(value)]="selectedGameId" (selectionChange)="changeSelectedGameId($event.value)">
               <mat-option *ngFor="let game of games" [value]="game.gameId">
@@ -27,42 +28,44 @@
     </mat-card>
   </mat-grid-tile>
 
+  <!-- game summary -->
   <mat-grid-tile [colspan]="2" [rowspan]="5">
     <mat-card class="dashboard-card">
-      <app-team-analysis-game-summary [gameSummary]="gameSummary"></app-team-analysis-game-summary>
+      <div *ngIf="selectedGameId==0; else viewSummary" class="please-select-gameId">
+        <img src="../../assets/logos/{{selectedTeam.id}}.svg" alt="Logo" class="please-select-logo">
+        <h2> {{directionsMessage}} </h2>
+      </div>
+      <ng-template #viewSummary>
+        <app-team-analysis-game-summary [gameSummary]="gameSummary"></app-team-analysis-game-summary>
+      </ng-template>
     </mat-card>
   </mat-grid-tile>
 
+  <!-- game flow graphic -->
   <mat-grid-tile [colspan]="3" [rowspan]="4">
     <mat-card class="dashboard-card">
-      placeholder for gameflow
+      <div *ngIf="selectedGameId==0; else viewGameflow" class="please-select-gameId">
+        <img src="../../assets/logos/{{selectedTeam.id}}.svg" alt="Logo" class="please-select-logo">
+        <h2> {{directionsMessage}} </h2>
+      </div>
+      <ng-template #viewGameflow>
+        placeholder for gameflow
+      </ng-template>
     </mat-card>
   </mat-grid-tile>
 
-  <!-- <mat-grid-tile colspan]="1" [rowspan]="1">
-    <mat-card class="dashboard-card">
-      hello
-    <app-team-analysis-game-summary [gameSummary]="gameSummary"></app-team-analysis-game-summary>
-    </mat-card>
-  </mat-grid-tile> -->
 </mat-grid-list>
 
 <!-- </div> -->
   
 
-  <!-- print out selections DELETE LATER -->
-  <!-- <div>{{selectedTeam.id}}</div> 
-  <div>{{selectedTeam.name}}</div> 
-  <div>{{selectedGameId}}</div>  -->
-
-  <!-- dashboard data -->
   <mat-grid-list cols="2" rowHeight="350px">
 
-    <div *ngIf="selectedGameId==0; else viewStats" class="please-select-gameId">
-      <img src="../../assets/logos/{{selectedTeam.id}}.svg" alt="Logo">
-      <h2> Please Select Game </h2>
+    <div *ngIf="selectedGameId==0; else viewLineStats" class="please-select-gameId">
+      <img src="../../assets/logos/{{selectedTeam.id}}.svg" alt="Logo" class="please-select-logo">
+      <h2> {{directionsMessage}} </h2>
     </div>
-    <ng-template #viewStats>
+    <ng-template #viewLineStats>
       <app-line-stats [lineStats]="lineStats"></app-line-stats>
     </ng-template>
     

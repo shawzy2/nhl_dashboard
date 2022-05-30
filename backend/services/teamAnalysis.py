@@ -131,9 +131,78 @@ def get_team_analysis(db, teamId, gameId):
             pass
     return final
     
-    # return lines
-    # return db.query(models.Roster).filter(models.Roster.playerId == playerId).all()
 
-    # return [row for row in players]
+def get_team_analysis_summary(db, gameId):
+    result = db.execute(
+        f"""
+        WITH game AS (
+            SELECT gameId, awayTeamId, homeTeamId, awayTeamScore, homeTeamScore
+            FROM schedules
+            WHERE gameId={gameId}
+        ),
+        home AS (
+            SELECT homeTeamId AS teamId, homeTeamScore AS goals, TRUE AS isHome
+            FROM game
+        ),
+        away AS (
+            SELECT AWAYTeamId AS teamId, AWAYTeamScore AS goals, FALSE AS isHome
+            FROM game
+        ),
+        bothTeams AS (
+            SELECT * FROM away
+            UNION ALL
+            SELECT * FROM home
+        ),
+        allTeams AS (
+            SELECT teamId, primaryColor
+            FROM teams
+        ),
+        shotStats AS (
+            SELECT teamId, 
+                SUM(CASE type WHEN 'SHOT' THEN 1 
+                        WHEN 'GOAL' THEN 1
+                        ELSE 0 END) as sog,
+                COUNT(*) AS cf, 
+                ROUND(SUM(xgoals),2) as xgf
+            FROM shots
+            WHERE gameId={gameId}
+            GROUP BY teamId
+        )
+        SELECT * FROM bothTeams
+        LEFT JOIN allTeams USING(teamId)
+        LEFT JOIN shotStats USING(teamId);
+        """)
 
-# GET_TEAM_ANAYSIS_QUERY = f"""SELECT * FROM schedules;"""
+    # read data from query
+    teams = [row for row in result]
+    teams_organized = {}
+    for team in teams:
+        if team['isHome'] == 1:
+            teams_organized['home'] = team
+        else:
+            teams_organized['away'] = team
+
+    # build return body
+    # team1 is away, team2 is home
+    final = {}
+    teamId1 = teams_organized['away']['teamId']
+    teamId2 = teams_organized['home']['teamId']
+    final['logoTeam1'] = f'/assets/logos/{teamId1}.svg'
+    final['logoTeam2'] = f'/assets/logos/{teamId2}.svg'
+    final['goalsTeam1'] = teams_organized['away']['goals']
+    final['goalsTeam2'] = teams_organized['home']['goals']
+    final['colorTeam1'] = teams_organized['away']['primaryColor']
+    final['colorTeam2'] = teams_organized['home']['primaryColor']
+    
+    stats = {
+        'xgf': 'Expected Goals',
+        'sog': 'Shots on Goal',
+        'cf': 'Corsi'
+    }
+    final['stats'] = [{
+        'statName': name,
+        'statValueTeam1': teams_organized['away'][stat_key],
+        'statValueTeam2': teams_organized['home'][stat_key]
+    } for stat_key, name in stats.items()]
+
+    return final

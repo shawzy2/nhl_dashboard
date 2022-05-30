@@ -63,6 +63,9 @@ def get_player(request: Request, playerId: int, db: Session = Depends(get_db)):
 def get_schedule(request: Request, teamId: int, db: Session = Depends(get_db)):
     return schedule.get_team_schedule(db, teamId)
 
+@app.get("/team-analysis/{teamId}/{gameId}/summary")
+def get_team_analysis_summary(request: Request, gameId: int, db: Session = Depends(get_db)):
+    return teamAnalysis.get_team_analysis_summary(db, gameId)
 
 @app.get("/team-analysis/{teamId}/{gameId}")
 def get_team_analysis(request: Request, teamId: int, gameId: int, db: Session = Depends(get_db)):

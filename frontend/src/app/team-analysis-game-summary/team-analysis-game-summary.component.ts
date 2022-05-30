@@ -7,14 +7,14 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class TeamAnalysisGameSummaryComponent implements OnInit {
 
-  @Input() gameSummary: any = []
+  @Input() gameSummary: any = {};
 
   constructor() { }
 
   ngOnInit(): void {
   }
 
-  setStyleLeftBar(s: any) {
+  setStyleLeftBar(s: any, color: string) {
     let val1 = eval(s.statValueTeam1);
     let val2 = eval(s.statValueTeam2);
     let width = (val1 / (val1 + val2)) * 100 - 0.25;
@@ -30,8 +30,8 @@ export class TeamAnalysisGameSummaryComponent implements OnInit {
     }
 
     let styles = {
-      'border-bottom': '2px solid', 
-      'border-color': s.statColorTeam1, 
+      'border-bottom': '3px solid', 
+      'border-color': color, 
       'border-radius': '12px', 
       'width': width + '%',
       'display': 'inline-block'
@@ -54,7 +54,7 @@ export class TeamAnalysisGameSummaryComponent implements OnInit {
     return styles;
   }
 
-  setStyleRightBar(s: any) {
+  setStyleRightBar(s: any, color: string) {
     let val1 = eval(s.statValueTeam1);
     let val2 = eval(s.statValueTeam2);
     let width = (val2 / (val1 + val2)) * 100 - 0.25;
@@ -70,8 +70,8 @@ export class TeamAnalysisGameSummaryComponent implements OnInit {
     }
 
     let styles = {
-      'border-bottom': '2px solid', 
-      'border-color': s.statColorTeam2, 
+      'border-bottom': '3px solid', 
+      'border-color': color, 
       'border-radius': '12px', 
       'width': width  + '%',
       'display': 'inline-block'
