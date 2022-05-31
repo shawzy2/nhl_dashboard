@@ -24,6 +24,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 
 import { HttpClientModule } from '@angular/common/http';
 import { TeamAnalysisGameSummaryComponent } from './team-analysis-game-summary/team-analysis-game-summary.component';
+import { GameflowChartComponent } from './components/gameflow-chart/gameflow-chart.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { TeamAnalysisGameSummaryComponent } from './team-analysis-game-summary/t
     NavComponent,
     TeamAnalysisComponent,
     LineStatsComponent,
-    TeamAnalysisGameSummaryComponent
+    TeamAnalysisGameSummaryComponent,
+    GameflowChartComponent
   ],
   imports: [
     BrowserModule,

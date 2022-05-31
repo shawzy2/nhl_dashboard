@@ -1,3 +1,4 @@
+from numpy import NaN
 from sqlalchemy import null
 import models
 
@@ -205,5 +206,97 @@ def get_team_analysis_summary(db, gameId):
         'statValueTeam1': teams_organized['away'][stat_key],
         'statValueTeam2': teams_organized['home'][stat_key]
     } for stat_key, name in stats.items()]
+
+    return final
+
+def get_team_analysis_gameflow(db, gameId):
+    result = db.execute(
+        f"""
+        WITH game AS (
+            SELECT teamId, isHome
+            FROM boxscores
+            WHERE gameId={gameId}
+        ),
+        gameShots AS (
+            SELECT teamId, 
+                time, 
+                SUM(1) as numShots
+            FROM shots
+            WHERE type='SHOT' AND gameId={gameId}
+            GROUP BY teamId, time
+        ),
+        allTimeFrames AS (
+            WITH RECURSIVE
+                cnt(x) AS (
+                SELECT 0
+                UNION ALL
+                SELECT x+1 FROM cnt
+                    LIMIT 3601
+                )
+            SELECT x as time
+            FROM cnt
+        ),
+        homeShots AS (
+            SELECT time, numShots
+            FROM gameShots
+            WHERE teamId IN (SELECT teamId FROM game WHERE isHome=1)
+        ),
+        homeShotsAvg AS (
+            SELECT time, 
+            ROUND(AVG(IFNULL(numShots,0)) OVER(ORDER BY time
+                    ROWS BETWEEN 300 PRECEDING AND CURRENT ROW )*3600,1) as shotsAvgHome
+            FROM allTimeFrames
+            LEFT JOIN homeShots USING(time)
+        ),
+        awayShots AS (
+            SELECT time, numShots
+            FROM gameShots
+            WHERE teamId IN (SELECT teamId FROM game WHERE isHome=0)
+        ),
+        awayShotsAvg AS (
+            SELECT time, 
+            ROUND(AVG(IFNULL(numShots,0)) OVER(ORDER BY time
+                    ROWS BETWEEN 300 PRECEDING AND CURRENT ROW )*3600,1) as shotsAvgAway
+            FROM allTimeFrames
+            LEFT JOIN awayShots USING(time)
+        )
+        SELECT time, shotsAvgHome, shotsAvgAway
+        FROM homeShotsAvg
+        LEFT JOIN awayShotsAvg USING(time)
+        WHERE time%60=0;
+        """
+    )
+
+    final = {
+        'labels': [],
+        'shotsAvgHome': [],
+        'shotsAvgAway': []
+    }
+    for row in result:
+        if row['time'] % 300 == 0:
+            final['labels'].append(str(int(row['time'] / 60)) + ':00')
+        else:
+            final['labels'].append('')
+        final['shotsAvgHome'].append(row['shotsAvgHome'])
+        final['shotsAvgAway'].append(row['shotsAvgAway'])
+
+    # get colors for each team
+    result = db.execute(
+        f"""
+        SELECT abbreviation, isHome, primaryColor
+        FROM boxscores 
+        LEFT JOIN (
+            SELECT teamId, abbreviation, primaryColor FROM teams
+        ) USING(teamId)
+        WHERE gameId={gameId};
+        """
+    )
+    for row in result:
+        if row['isHome']:
+            final['colorHome'] = row['primaryColor']
+            final['abbHome'] = row['abbreviation']
+        else:
+            final['colorAway'] = row['primaryColor']
+            final['abbAway'] = row['abbreviation']
 
     return final

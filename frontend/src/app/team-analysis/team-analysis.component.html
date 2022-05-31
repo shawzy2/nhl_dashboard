@@ -49,7 +49,7 @@
         <h2> {{directionsMessage}} </h2>
       </div>
       <ng-template #viewGameflow>
-        placeholder for gameflow
+        <app-gameflow-chart [gameflow]="gameflow"></app-gameflow-chart>
       </ng-template>
     </mat-card>
   </mat-grid-tile>

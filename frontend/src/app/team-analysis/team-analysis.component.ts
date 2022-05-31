@@ -36,6 +36,7 @@ export class TeamAnalysisComponent {
   games: Game[] = [];
   lineStats: LineStatsItem[] = []; 
   gameSummary: any = {}
+  gameflow: any = {}
 
   ngOnInit() {
     // update 'Select a Team' selector
@@ -54,6 +55,7 @@ export class TeamAnalysisComponent {
     this.selectedGameId = 0;
     this.lineStats = [];
     this.gameSummary = {};
+    this.gameflow = {};
 
     // update 'Select a Game' selector
     var url = `http://localhost:8000/schedule/${this.selectedTeam.id}`
@@ -78,6 +80,15 @@ export class TeamAnalysisComponent {
     this.http.get<any>(url).subscribe(
       response => {
         this.gameSummary = response;
+      }
+    )
+
+    //set gameflow data
+    var url = `http://localhost:8000/team-analysis/3/${this.selectedGameId}/gameflow`
+    this.http.get<any>(url).subscribe(
+      response => {
+        console.log(response)
+        this.gameflow = response;
       }
     )
   }
