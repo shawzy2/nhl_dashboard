@@ -42,12 +42,7 @@ export class GameflowChartComponent implements OnInit {
         } = chart;
         ctx.save();
 
-        console.log(this.goalTimesHome);
-        for (let i of this.goalTimesHome) {
-          console.log(i);
-        }
-
-        // 1. draw the line
+        // draw line for each home/away goal
         let offset = 0;
         let barWidth = 3;
         for (let goalTime of this.goalTimesHome) {
@@ -100,7 +95,7 @@ export class GameflowChartComponent implements OnInit {
           },
           title: {
             display: true,
-            text: 'Gameflow'
+            text: 'Shot Pace and Goals Scored (Vertical Bars)'
           }
         },
         scales: {

@@ -11,19 +11,21 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
-import { TeamAnalysisComponent } from './team-analysis/team-analysis.component';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import {MatSelectModule} from '@angular/material/select';
-import { LineStatsComponent } from './line-stats/line-stats.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import {MatTooltipModule} from '@angular/material/tooltip';
 
 import { HttpClientModule } from '@angular/common/http';
-import { TeamAnalysisGameSummaryComponent } from './team-analysis-game-summary/team-analysis-game-summary.component';
+
+// components
+import { TeamAnalysisComponent } from './team-analysis/team-analysis.component';
+import { LineStatsComponent } from './components/line-stats/line-stats.component';
+import { TeamAnalysisGameSummaryComponent } from './components/team-analysis-game-summary/team-analysis-game-summary.component';
 import { GameflowChartComponent } from './components/gameflow-chart/gameflow-chart.component';
 
 @NgModule({

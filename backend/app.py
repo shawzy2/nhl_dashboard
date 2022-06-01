@@ -63,15 +63,15 @@ def get_player(request: Request, playerId: int, db: Session = Depends(get_db)):
 def get_schedule(request: Request, teamId: int, db: Session = Depends(get_db)):
     return schedule.get_team_schedule(db, teamId)
 
-@app.get("/team-analysis/{teamId}/{gameId}/summary")
+@app.get("/team-analysis/{gameId}/summary")
 def get_team_analysis_summary(request: Request, gameId: int, db: Session = Depends(get_db)):
     return teamAnalysis.get_team_analysis_summary(db, gameId)
 
-@app.get("/team-analysis/{teamId}/{gameId}/gameflow")
+@app.get("/team-analysis/{gameId}/gameflow")
 def get_team_analysis_gameflow(request: Request, gameId: int, db: Session = Depends(get_db)):
     return teamAnalysis.get_team_analysis_gameflow(db, gameId)
 
-@app.get("/team-analysis/{teamId}/{gameId}")
+@app.get("/team-analysis/{gameId}/linestats/{teamId}")
 def get_team_analysis(request: Request, teamId: int, gameId: int, db: Session = Depends(get_db)):
     return teamAnalysis.get_team_analysis(db, teamId, gameId)
 

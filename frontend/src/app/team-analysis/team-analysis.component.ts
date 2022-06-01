@@ -3,7 +3,7 @@ import { map } from 'rxjs/operators';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { NONE_TYPE } from '@angular/compiler';
 import { HttpClient } from '@angular/common/http';
-import { LineStatsItem } from '../line-stats/line-stats-datasource';
+import { LineStatsItem } from '../components/line-stats/line-stats-datasource';
 
 interface Game {
   gameId: number,
@@ -49,7 +49,6 @@ export class TeamAnalysisComponent {
   }
 
   changeSelectedTeam(selectedTeam: any) {
-    console.log(selectedTeam.id);
     // reset selector vals
     this.directionsMessage = 'Please Select Game'
     this.selectedGameId = 0;
@@ -68,7 +67,7 @@ export class TeamAnalysisComponent {
 
   changeSelectedGameId(selectedGameId: any) {
     // update lineStats data
-    var url = `http://localhost:8000/team-analysis/${this.selectedTeam.id}/${this.selectedGameId}`
+    var url = `http://localhost:8000/team-analysis/${this.selectedGameId}/linestats/${this.selectedTeam.id}`
     this.http.get<any>(url).subscribe(
       response => {
         this.lineStats = response as LineStatsItem[];
@@ -76,7 +75,7 @@ export class TeamAnalysisComponent {
     )
 
     // update gameSummary data
-    var url = `http://localhost:8000/team-analysis/${this.selectedTeam.id}/${this.selectedGameId}/summary`
+    var url = `http://localhost:8000/team-analysis/${this.selectedGameId}/summary`
     this.http.get<any>(url).subscribe(
       response => {
         this.gameSummary = response;
@@ -84,10 +83,9 @@ export class TeamAnalysisComponent {
     )
 
     //set gameflow data
-    var url = `http://localhost:8000/team-analysis/3/${this.selectedGameId}/gameflow`
+    var url = `http://localhost:8000/team-analysis/${this.selectedGameId}/gameflow`
     this.http.get<any>(url).subscribe(
       response => {
-        console.log(response)
         this.gameflow = response;
       }
     )
