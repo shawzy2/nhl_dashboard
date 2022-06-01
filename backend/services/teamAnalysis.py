@@ -270,7 +270,9 @@ def get_team_analysis_gameflow(db, gameId):
     final = {
         'labels': [],
         'shotsAvgHome': [],
-        'shotsAvgAway': []
+        'shotsAvgAway': [],
+        'goalTimesHome': [],
+        'goalTimesAway': []
     }
     for row in result:
         if row['time'] % 300 == 0:
@@ -298,5 +300,34 @@ def get_team_analysis_gameflow(db, gameId):
         else:
             final['colorAway'] = row['primaryColor']
             final['abbAway'] = row['abbreviation']
+
+    # get goal times for each team
+    result = db.execute(
+        f"""
+        WITH game AS (
+            SELECT teamId, isHome
+            FROM boxscores
+            WHERE gameId={gameId}
+        ),
+        gameShots AS (
+            SELECT teamId, 
+                type,
+                time, 
+                SUM(1) as numShots
+            FROM shots
+            WHERE (type='SHOT' OR type='GOAL') AND gameId={gameId}
+            GROUP BY teamId, time
+        )
+        SELECT time, isHome
+        FROM gameShots
+        LEFT JOIN game USING(teamId)
+        WHERE type='GOAL';
+        """
+    )
+    for row in result:
+        if row['isHome']:
+            final['goalTimesHome'].append(row['time'])
+        else:
+            final['goalTimesAway'].append(row['time'])
 
     return final
