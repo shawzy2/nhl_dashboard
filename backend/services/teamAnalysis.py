@@ -9,57 +9,82 @@ def get_team_analysis(db, teamId, gameId):
     result = db.execute(
         f"""
         WITH lineShots AS (
-            SELECT  gameId, teamId, homeTeamId, type, xgoals,
-                    CASE WHEN teamId = homeTeamId THEN homeFwdIds ELSE awayFwdIds END as lineCf,
-                    CASE WHEN teamId = homeTeamId THEN awayFwdIds ELSE homeFwdIds END as lineCa
+            SELECT  gameId, teamId, homeTeamId, type, xgoals, scenario,
+                    CASE WHEN teamId = homeTeamId THEN homeFwdIds ELSE awayFwdIds END as fwdCfLine,
+                    CASE WHEN teamId = homeTeamId THEN awayFwdIds ELSE homeFwdIds END as fwdCaLine,
+                    CASE WHEN teamId = homeTeamId THEN homeDefIds ELSE awayDefIds END as defCfLine,
+                    CASE WHEN teamId = homeTeamId THEN awayDefIds ELSE homeDefIds END as defCaLine,
+                    CASE WHEN teamId = homeTeamId THEN homeNumPlayers ELSE awayNumPlayers END as numPlayers
             FROM (
-                SELECT gameId, teamId, type,  (
-                        SELECT homeTeamId 
-                        FROM schedules
-                        WHERE gameId={gameId}
-                    ) as homeTeamId, awayFwdIds, awayDefIds, homeFwdIds, homeDefIds, xgoals
+                SELECT gameId, teamId, type, (
+                SELECT homeTeamId FROM schedules
+                WHERE gameId={gameId}
+                ) as homeTeamId, awayFwdIds, awayDefIds, homeFwdIds, homeDefIds, 
+                    xgoals, scenario, homeNumPlayers, awayNumPlayers
                 FROM shots
                 WHERE gameId={gameId} AND scenario='5on5'
             )
         ),
-        corsiFor AS (
-            SELECT lineCf, COUNT(*) as cf, SUM(xgoals) as xgf
+        fwdCorsiFor AS (
+            SELECT fwdCfLine as lineId, COUNT(*) as cf, SUM(xgoals) as xgf
             FROM lineShots
-            WHERE gameId={gameId} AND teamId={teamId}
-            GROUP BY lineCf
+            WHERE teamId={teamId}
+            GROUP BY lineId
         ),
-        corsiAgainst AS (
-            SELECT lineCA, COUNT(*) as ca, SUM(xgoals) as xga
+        defCorsiFor AS (
+            SELECT defCfLine as lineId, COUNT(*) as cf, SUM(xgoals) as xgf
             FROM lineShots
-            WHERE gameId={gameId} AND teamId!={teamId}
-            GROUP BY lineCa
+            WHERE teamId={teamId}
+            GROUP BY lineId
+        ),
+        fwdCorsiAgainst AS (
+            SELECT fwdCaLine as lineId, COUNT(*) as ca, SUM(xgoals) as xga
+            FROM lineShots
+            WHERE teamId!={teamId}
+            GROUP BY lineId
+        ),
+        defCorsiAgainst AS (
+            SELECT defCaLine as lineId, COUNT(*) as ca, SUM(xgoals) as xga
+            FROM lineShots
+            WHERE teamId!={teamId} 
+            GROUP BY lineId
         ),
         minutesPlayed AS (
-            SELECT lineId, ROUND(SUM(duration)/60.0, 1) as mp
+            SELECT lineId, lineType, ROUND(SUM(duration)/60.0, 1) as mp
             FROM shifts
             WHERE gameId={gameId} AND teamId={teamId} AND scenario='5on5'
             GROUP BY lineId
+        ),
+        fwdStats AS (
+            SELECT lineId, lineType, mp, IFNULL(cf,0) as cf, 
+                    IFNULL(ca,0) as ca,
+                    IFNULL(ROUND(xgf,2),0) as xgf,
+                    IFNULL(ROUND(xga,2),0) as xga
+            FROM minutesPlayed
+            LEFT JOIN fwdCorsiFor USING(lineId)
+            LEFT JOIN fwdCorsiAgainst USING(lineId)
+            WHERE lineType='fwd' AND mp>0.1
+        ),
+        defStats AS (
+            SELECT lineId, lineType, mp, IFNULL(cf,0) as cf, 
+                    IFNULL(ca,0) as ca,
+                    IFNULL(ROUND(xgf,2),0) as xgf,
+                    IFNULL(ROUND(xga,2),0) as xga
+            FROM minutesPlayed
+            LEFT JOIN defCorsiFor USING(lineId)
+            LEFT JOIN defCorsiAgainst USING(lineId)
+            WHERE lineType='def' AND mp>0.1
         )
-        
-        SELECT * FROM (
-            SELECT lineCf AS lineId, minutesPlayed.mp as mp, cf, corsiAgainst.ca as ca, xgf, corsiAgainst.xga as xga
-            FROM corsiFor
-            LEFT JOIN (
-                SELECT lineCa, ca, xga
-                FROM corsiAgainst
-            ) AS corsiAgainst ON lineCf=corsiAgainst.lineCa
-            LEFT JOIN (
-                SELECT lineId, mp
-                FROM minutesPlayed
-            ) AS minutesPlayed ON lineCf=minutesPlayed.lineId
-            ORDER BY mp DESC
-        ) WHERE mp > 0;
+        SELECT * FROM fwdStats
+        UNION
+        SELECT * FROM defStats
+        ORDER BY lineType DESC, mp DESC;
         """
     )
 
     # now convert lineId to individual players and names
     lines = [row for row in result]
-    # return lines
+
     all_playerIds = set()
     for line in lines:
         for playerId in line['lineId'].split('_'):
@@ -79,59 +104,41 @@ def get_team_analysis(db, teamId, gameId):
             'position': player['position']
         }
     
-    final = []
+    # return player_info
+    
+    final = {'fwd': [], 'def': []}
     i = 1
     for line in lines:
         linies = [int(i) for i in line['lineId'].split('_')]
+        players_in_line = [{
+            'name': player_info[linie_id]['abbName'],
+            'playerId': linie_id
+        } for linie_id in linies]
 
-        # # sort players by position
-        # linies_sorted = []
-        # for linemate in linies:
-        #     if len(linies_sorted) == 0 and player_info[linemate]['position'] == 'LW':
-        #         linies_sorted.append(linemate)
-
-        #         break
-        # linies_sorted = []
-        # for linie in linies:
-        #     if player_info[linie]['position'] == 'LW':
-        #         playerId1 = linie
-        #     elif player_info[linie]['position'] == 'C':
-        #         playerId2 = linie
-        #     elif player_info[linie]['position'] == 'RW':
-        #         playerId3 = linie
-
-
-
-        cf = 0
-        ca = 0
-        if line['cf'] is not None: cf = line['cf']
-        if line['ca'] is not None: ca = line['ca']
-
-        xgf = 0
-        xga = 0
-        if line['xgf'] is not None: xgf = round(line['xgf'], 2)
-        if line['xga'] is not None: xga = round(line['xga'], 2)
-        try:
-            final.append({
-                'name': f'fwd{i}',
-                'id': i,
-                'player1': player_info[linies[0]]['abbName'],
-                'player2': player_info[linies[1]]['abbName'],
-                'player3': player_info[linies[2]]['abbName'],
-                'headshot1': f'/assets/headshots/{linies[0]}.jpg',
-                'headshot2': f'/assets/headshots/{linies[1]}.jpg',
-                'headshot3': f'/assets/headshots/{linies[2]}.jpg',
+        if line['lineType'] == 'fwd':
+            final['fwd'].append({
+                'id': len(final['fwd']) + 1,
                 'mp': line['mp'],
-                'cf': cf,
-                'ca': ca,
-                'cr': cf - ca,
-                'xgf': xgf,
-                'xga': xga,
-                'xgr': round(xgf - xga, 2)
+                'cf': line['cf'],
+                'ca': line['ca'],
+                'cr': line['cf'] - line['ca'],
+                'xgf': line['xgf'],
+                'xga': line['xga'],
+                'xgr': round(line['xgf'] - line['xga'], 2),
+                'players': players_in_line
             })
-            i += 1
-        except:
-            pass
+        else:
+            final['def'].append({
+                'id': len(final['def']) + 1,
+                'mp': line['mp'],
+                'cf': line['cf'],
+                'ca': line['ca'],
+                'cr': line['cf'] - line['ca'],
+                'xgf': line['xgf'],
+                'xga': line['xga'],
+                'xgr': round(line['xgf'] - line['xga'], 2),
+                'players': players_in_line
+            })
     return final
 
 def get_team_analysis_summary(db, gameId):
