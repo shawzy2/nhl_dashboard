@@ -1,6 +1,8 @@
+from turtle import color
 from numpy import NaN
 from sqlalchemy import null
 import models
+from utils.color import decide_color
 
 def get_team_analysis(db, teamId, gameId):
     # query db to get line statistics
@@ -131,7 +133,6 @@ def get_team_analysis(db, teamId, gameId):
         except:
             pass
     return final
-    
 
 def get_team_analysis_summary(db, gameId):
     result = db.execute(
@@ -143,7 +144,7 @@ def get_team_analysis_summary(db, gameId):
             WHERE gameId={gameId}
         ),
         allTeams AS (
-            SELECT teamId, primaryColor
+            SELECT teamId, primaryColor, secondaryColor
             FROM teams
         ),
         shotStats AS (
@@ -180,6 +181,15 @@ def get_team_analysis_summary(db, gameId):
             teams_organized['home'] = team
         else:
             teams_organized['away'] = team
+    
+    # get colors for each team
+    final_colors = decide_color(
+        teams_organized['home']['primaryColor'], 
+        teams_organized['home']['secondaryColor'], 
+        teams_organized['away']['primaryColor'], 
+        teams_organized['away']['secondaryColor']
+    )
+
 
     # build return body
     # team1 is away, team2 is home
@@ -190,8 +200,8 @@ def get_team_analysis_summary(db, gameId):
     final['logoTeam2'] = f'/assets/logos/{teamId2}.svg'
     final['goalsTeam1'] = teams_organized['away']['goals']
     final['goalsTeam2'] = teams_organized['home']['goals']
-    final['colorTeam1'] = teams_organized['away']['primaryColor']
-    final['colorTeam2'] = teams_organized['home']['primaryColor']
+    final['colorTeam1'] = final_colors['away']
+    final['colorTeam2'] = final_colors['home']
     
     stats = {
         'xgf': 'Expected Goals',
@@ -282,24 +292,30 @@ def get_team_analysis_gameflow(db, gameId):
         final['shotsAvgHome'].append(row['shotsAvgHome'])
         final['shotsAvgAway'].append(row['shotsAvgAway'])
 
-    # get colors for each team
+    # get colors and abbreviation for each team
     result = db.execute(
         f"""
-        SELECT abbreviation, isHome, primaryColor
+        SELECT abbreviation, isHome, primaryColor, secondaryColor
         FROM boxscores 
         LEFT JOIN (
-            SELECT teamId, abbreviation, primaryColor FROM teams
+            SELECT teamId, abbreviation, primaryColor, secondaryColor FROM teams
         ) USING(teamId)
         WHERE gameId={gameId};
         """
     )
+    available_colors = {}
     for row in result:
         if row['isHome']:
-            final['colorHome'] = row['primaryColor']
+            available_colors['homePrimary'] = row['primaryColor']
+            available_colors['homeSecondary'] = row['secondaryColor']
             final['abbHome'] = row['abbreviation']
         else:
-            final['colorAway'] = row['primaryColor']
+            available_colors['awayPrimary'] = row['primaryColor']
+            available_colors['awaySecondary'] = row['secondaryColor']
             final['abbAway'] = row['abbreviation']
+    final_colors = decide_color(available_colors['homePrimary'], available_colors['homeSecondary'], available_colors['awayPrimary'], available_colors['awaySecondary'])
+    final['colorHome'] = final_colors['home']
+    final['colorAway'] = final_colors['away']
 
     # get goal times for each team
     result = db.execute(
