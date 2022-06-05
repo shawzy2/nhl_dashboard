@@ -4,6 +4,7 @@ import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { NONE_TYPE } from '@angular/compiler';
 import { HttpClient } from '@angular/common/http';
 import { LineStatsItem } from '../components/line-stats/line-stats-datasource';
+import { environment } from 'src/environments/environment';
 
 interface Game {
   gameId: number,
@@ -41,7 +42,7 @@ export class TeamAnalysisComponent {
 
   ngOnInit() {
     // update 'Select a Team' selector
-    var url = `http://localhost:8000/teams/division`
+    var url = environment.apiUrl + `teams/division`
     this.http.get<any>(url).subscribe(
       response => {
         this.divisions = response as Division[];
@@ -58,7 +59,7 @@ export class TeamAnalysisComponent {
     this.gameflow = {};
 
     // update 'Select a Game' selector
-    var url = `http://localhost:8000/schedule/${this.selectedTeam.id}`
+    var url = environment.apiUrl + `schedule/${this.selectedTeam.id}`
     this.http.get<any>(url).subscribe(
       response => {
         this.games = response as Game[];
@@ -68,7 +69,7 @@ export class TeamAnalysisComponent {
 
   changeSelectedGameId(selectedGameId: any) {
     // update lineStats data
-    var url = `http://localhost:8000/team-analysis/${this.selectedGameId}/linestats/${this.selectedTeam.id}`
+    var url = environment.apiUrl + `team-analysis/${this.selectedGameId}/linestats/${this.selectedTeam.id}`
     this.http.get<any>(url).subscribe(
       response => {
         this.lineStats = response;
@@ -76,7 +77,7 @@ export class TeamAnalysisComponent {
     )
 
     // update gameSummary data
-    var url = `http://localhost:8000/team-analysis/${this.selectedGameId}/summary`
+    var url = environment.apiUrl + `team-analysis/${this.selectedGameId}/summary`
     this.http.get<any>(url).subscribe(
       response => {
         this.gameSummary = response;
@@ -84,7 +85,7 @@ export class TeamAnalysisComponent {
     )
 
     //set gameflow data
-    var url = `http://localhost:8000/team-analysis/${this.selectedGameId}/gameflow`
+    var url = environment.apiUrl + `team-analysis/${this.selectedGameId}/gameflow`
     this.http.get<any>(url).subscribe(
       response => {
         this.gameflow = response;
