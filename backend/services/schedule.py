@@ -7,7 +7,7 @@ def get_team_schedule(db, teamId):
     result = db.execute(
         f"""
         WITH games as (
-            SELECT gameId, awayTeamId, homeTeamId, dateTime
+            SELECT gameId, awayTeamId, homeTeamId, date(dateTime,'-4 hours') as dateTime
             FROM schedules
             WHERE awayTeamId={teamId} OR homeTeamId={teamId}
             ORDER BY gameId
