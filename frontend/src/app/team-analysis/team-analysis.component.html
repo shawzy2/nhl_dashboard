@@ -1,5 +1,5 @@
 <div class="grid-container">
-  <h1 class="mat-h1">Dashboard</h1>
+  <h1 class="mat-h1">Team Analysis - Single Game</h1>
 
 
   <mat-grid-list cols="5" rowHeight="120px" gutterSize="-15px">
@@ -55,40 +55,74 @@
   </mat-grid-tile>
 
   <!-- line tables/graphics -->
-  <mat-grid-tile [colspan]="5" [rowspan]="10">
+  <!-- <mat-grid-tile [colspan]="5" [rowspan]="7">
     <mat-card class="dashboard-card">
-      <mat-tab-group animationDuration="0ms">
-        <mat-tab label="Forwards">
-          <div class="example-small-box mat-elevation-z4">
-            Small content
+      <div *ngIf="selectedGameId==0; else viewLineStats" class="please-select-gameId">
+        <img src="../../assets/logos/{{selectedTeam.id}}.svg" alt="Logo" class="please-select-logo">
+        <h2> {{directionsMessage}} </h2>
+      </div>
+      <ng-template #viewLineStats>
+        <div style="display: flex;">
+          <h1 class="headers">5on5 Line Statistics</h1>
+          <div class="info-tooltips">
+            <a mat-raised-button 
+                matTooltip="Click here to view details of expected goals model"
+                matTooltipPosition="above"
+                href="https://github.com/shawzy2/expected_goals" target="_blank">
+              Expected Goals Model  
+              <mat-icon>open_in_new</mat-icon>
+            </a>
           </div>
-        </mat-tab>
-        <mat-tab label="Defensemen">
-          <app-line-stats [lineStats]="lineStats"></app-line-stats>
-        </mat-tab>
-        <mat-tab label="Goalies"> goalie Content 3 </mat-tab>
-      </mat-tab-group>
-  </mat-card>
-  </mat-grid-tile>
+        </div>
+        <mat-tab-group animationDuration="0ms">
+          <mat-tab label="Forwards">
+            <app-line-stats [lineStats]="lineStats.fwd" [lineStatsType]="'fwd'" [lineStatsTableLength]="4"></app-line-stats>
+          </mat-tab>
+          <mat-tab label="Defensemen">
+            <app-line-stats [lineStats]="lineStats.def" [lineStatsType]="'def'" [lineStatsTableLength]="3"></app-line-stats>
+          </mat-tab>
+          <mat-tab label="Forwards+Defensemen"> placeholder </mat-tab>
+        </mat-tab-group>
+      </ng-template>
+    </mat-card>
+  </mat-grid-tile> -->
 
 </mat-grid-list>
 
-<!-- </div> -->
-  
-
-  <mat-grid-list cols="2" rowHeight="350px">
-
+<div>
+  <mat-card class="dashboard-card-5on5">
     <div *ngIf="selectedGameId==0; else viewLineStats" class="please-select-gameId">
       <img src="../../assets/logos/{{selectedTeam.id}}.svg" alt="Logo" class="please-select-logo">
       <h2> {{directionsMessage}} </h2>
     </div>
     <ng-template #viewLineStats>
-      <app-line-stats [lineStats]="lineStats"></app-line-stats>
+      <div style="display: flex;">
+        <h1 class="headers">5on5 Line Statistics</h1>
+        <div class="info-tooltips">
+          <a mat-raised-button 
+              matTooltip="Click here to view details of expected goals model"
+              matTooltipPosition="above"
+              href="https://github.com/shawzy2/expected_goals" target="_blank">
+            Expected Goals Model  
+            <mat-icon>open_in_new</mat-icon>
+          </a>
+        </div>
+      </div>
+      <mat-tab-group animationDuration="0ms">
+        <mat-tab label="Forwards">
+          <app-line-stats [lineStats]="lineStats.fwd" [lineStatsType]="'fwd'" [lineStatsTableLength]="4"></app-line-stats>
+        </mat-tab>
+        <mat-tab label="Defensemen">
+          <app-line-stats [lineStats]="lineStats.def" [lineStatsType]="'def'" [lineStatsTableLength]="3"></app-line-stats>
+        </mat-tab>
+        <mat-tab label="Forwards+Defensemen"> placeholder </mat-tab>
+      </mat-tab-group>
     </ng-template>
-    
+  </mat-card>
+</div>
 
-
-    <!-- <mat-grid-tile *ngFor="let card of cards | async" [colspan]="card.cols" [rowspan]="card.rows">
+  <!-- <mat-grid-list rowHeight="350px">
+    <mat-grid-tile *ngFor="let card of cards | async" [colspan]="card.cols" [rowspan]="card.rows">
       <mat-card class="dashboard-card">
         <mat-card-header>
           <mat-card-title>
@@ -106,6 +140,6 @@
           <div>Card Content Here</div>
         </mat-card-content>
       </mat-card>
-    </mat-grid-tile> -->
-  </mat-grid-list>
+    </mat-grid-tile>
+  </mat-grid-list> -->
 </div>

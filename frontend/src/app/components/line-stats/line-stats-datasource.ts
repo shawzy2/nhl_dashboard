@@ -8,16 +8,15 @@ import { TeamAnalysisComponent } from '../../team-analysis/team-analysis.compone
 import { HttpClient } from '@angular/common/http';
 
 
-// TODO: Replace this with your own data model type
+interface PlayerItem {
+  name: string;
+  playerId: number;
+}
+
 export interface LineStatsItem {
   name: string;
   id: number;
-  player1: string;
-  player2: string;
-  player3: string;
-  headshot1: string;
-  headshot2: string;
-  headshot3: string;
+  players: PlayerItem[];
   mp: number;
   cf: number;
   ca: number;
@@ -43,6 +42,7 @@ export class LineStatsDataSource extends DataSource<LineStatsItem> {
   constructor(lineStatss: LineStatsItem[], num: any) {
     super();
     this.data = lineStatss;
+    console.log(lineStatss);
   }
 
   /**

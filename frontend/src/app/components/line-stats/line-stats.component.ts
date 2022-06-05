@@ -16,6 +16,8 @@ export class LineStatsComponent implements AfterViewInit, OnChanges {
   dataSource: LineStatsDataSource;
 
   @Input() lineStats: LineStatsItem[] = [];
+  @Input() lineStatsType: string = "";
+  @Input() lineStatsTableLength: number = 0;
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
   displayedColumns = [

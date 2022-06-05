@@ -34,7 +34,8 @@ export class TeamAnalysisComponent {
   teams: Team[] = [];
   divisions: Division[] = []
   games: Game[] = [];
-  lineStats: LineStatsItem[] = []; 
+  lineStats: any = []; 
+  // lineStats: LineStatsItem[] = []; 
   gameSummary: any = {}
   gameflow: any = {}
 
@@ -70,7 +71,7 @@ export class TeamAnalysisComponent {
     var url = `http://localhost:8000/team-analysis/${this.selectedGameId}/linestats/${this.selectedTeam.id}`
     this.http.get<any>(url).subscribe(
       response => {
-        this.lineStats = response as LineStatsItem[];
+        this.lineStats = response;
       }
     )
 
