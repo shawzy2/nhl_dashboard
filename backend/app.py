@@ -24,7 +24,11 @@ origins = [
     "http://frontend:4200",
     "http://frontend",
     "http://0.0.0.0:4200",
-    "http://0.0.0.0"
+    "http://0.0.0.0",
+    "http://10.150.0.3:4200",
+    "http://10.150.0.3",
+    "http://34.86.26.19:4200",
+    "http://34.86.26.19"
 ]
 
 app.add_middleware(
