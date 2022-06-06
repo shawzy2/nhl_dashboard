@@ -20,6 +20,11 @@ app = FastAPI()
 
 origins = [
     "http://localhost:4200",
+    "http://localhost",
+    "http://frontend:4200",
+    "http://frontend",
+    "http://0.0.0.0:4200",
+    "http://0.0.0.0"
 ]
 
 app.add_middleware(
@@ -28,6 +33,7 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"]
 )
 
 # Dependency

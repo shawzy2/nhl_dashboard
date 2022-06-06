@@ -1,0 +1,21 @@
+version: '3'
+services:
+    backend:
+        build: 
+            context: ./backend
+            dockerfile: Dockerfile.backend
+        container_name: dash-backend
+        ports:
+            - 80:80
+        expose:
+            - 80
+
+    frontend:
+        build: 
+            context: ./frontend
+            dockerfile: Dockerfile.frontend
+        container_name: dash-frontend
+        ports: 
+            - 4200:4200
+        depends_on:
+            - backend
