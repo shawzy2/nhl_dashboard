@@ -239,7 +239,7 @@ def get_team_analysis_gameflow(db, gameId):
                 time, 
                 SUM(1) as numShots
             FROM shots
-            WHERE type='SHOT' AND gameId={gameId}
+            WHERE (type='SHOT' OR type='GOAL') AND gameId={gameId}
             GROUP BY teamId, time
         ),
         allTimeFrames AS (
@@ -248,7 +248,7 @@ def get_team_analysis_gameflow(db, gameId):
                 SELECT 0
                 UNION ALL
                 SELECT x+1 FROM cnt
-                    LIMIT 3601
+                    LIMIT (SELECT max(time) FROM gameShots) + 60
                 )
             SELECT x as time
             FROM cnt

@@ -15,6 +15,7 @@ export class GameflowChartComponent implements OnInit {
   myChartObject: any;
   goalTimesAway: Array<Number> = [];
   goalTimesHome: Array<Number> = [];
+  totalTime: number = 0;
 
   constructor() { }
 
@@ -33,6 +34,7 @@ export class GameflowChartComponent implements OnInit {
       colorHome: this.gameflow.colorHome,
       goalTimesAway: this.goalTimesAway,
       goalTimesHome: this.goalTimesHome,
+      totalTime: this.totalTime,
       id: 'arbitraryLine',
       beforeDraw(chart: any, args: any, options: any) {
         const { 
@@ -46,12 +48,12 @@ export class GameflowChartComponent implements OnInit {
         let offset = 0;
         let barWidth = 3;
         for (let goalTime of this.goalTimesHome) {
-          offset = Number(goalTime) / 3600 * width;
+          offset = Number(goalTime) / this.totalTime * width;
           ctx.fillStyle = this.colorHome;
           ctx.fillRect(left + offset - (barWidth / 2), top, barWidth, height);
         }
         for (let goalTime of this.goalTimesAway) {
-          offset = Number(goalTime) / 3600 * width;
+          offset = Number(goalTime) / this.totalTime * width;
           ctx.fillStyle = this.colorAway;
           ctx.fillRect(left + offset - (barWidth / 2), top, barWidth, height);
         }
@@ -123,6 +125,8 @@ export class GameflowChartComponent implements OnInit {
     if (!changes['gameflow'].firstChange) {
       this.goalTimesAway = this.gameflow.goalTimesAway;
       this.goalTimesHome = this.gameflow.goalTimesHome;
+      this.totalTime = this.gameflow.labels.length * 60 - 60;
+      console.log(this.totalTime);
       this.myChartObject.destroy();
       this.loadChart();
     }
