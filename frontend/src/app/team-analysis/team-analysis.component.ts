@@ -62,7 +62,6 @@ export class TeamAnalysisComponent {
     var url = environment.apiUrl + `schedule/${this.selectedTeam.id}`
     this.http.get<any>(url).subscribe(
       response => {
-        console.log(url);
         this.games = response as Game[];
       }
     )

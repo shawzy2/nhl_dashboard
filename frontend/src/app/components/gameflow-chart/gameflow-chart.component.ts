@@ -126,7 +126,6 @@ export class GameflowChartComponent implements OnInit {
       this.goalTimesAway = this.gameflow.goalTimesAway;
       this.goalTimesHome = this.gameflow.goalTimesHome;
       this.totalTime = this.gameflow.labels.length * 60 - 60;
-      console.log(this.totalTime);
       this.myChartObject.destroy();
       this.loadChart();
     }

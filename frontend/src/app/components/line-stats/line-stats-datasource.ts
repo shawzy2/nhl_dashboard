@@ -42,7 +42,6 @@ export class LineStatsDataSource extends DataSource<LineStatsItem> {
   constructor(lineStatss: LineStatsItem[], num: any) {
     super();
     this.data = lineStatss;
-    console.log(lineStatss);
   }
 
   /**
