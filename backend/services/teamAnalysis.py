@@ -14,13 +14,15 @@ def get_team_analysis(db, teamId, gameId):
                     CASE WHEN teamId = homeTeamId THEN awayFwdIds ELSE homeFwdIds END as fwdCaLine,
                     CASE WHEN teamId = homeTeamId THEN homeDefIds ELSE awayDefIds END as defCfLine,
                     CASE WHEN teamId = homeTeamId THEN awayDefIds ELSE homeDefIds END as defCaLine,
+                    CASE WHEN teamId = homeTeamId THEN homeFwdIds || '_' || homeDefIds ELSE awayFwdIds || '_' || awayDefIds END as allCfLine,
+                    CASE WHEN teamId = homeTeamId THEN awayFwdIds || '_' || awayDefIds ELSE homeFwdIds || '_' || homeDefIds END as allCaLine,
                     CASE WHEN teamId = homeTeamId THEN homeNumPlayers ELSE awayNumPlayers END as numPlayers
             FROM (
                 SELECT gameId, teamId, type, (
-                SELECT homeTeamId FROM schedules
-                WHERE gameId={gameId}
+                    SELECT homeTeamId FROM schedules
+                    WHERE gameId={gameId}
                 ) as homeTeamId, awayFwdIds, awayDefIds, homeFwdIds, homeDefIds, 
-                    xgoals, scenario, homeNumPlayers, awayNumPlayers
+                       xgoals, scenario, homeNumPlayers, awayNumPlayers
                 FROM shots
                 WHERE gameId={gameId} AND scenario='5on5'
             )
@@ -49,6 +51,18 @@ def get_team_analysis(db, teamId, gameId):
             WHERE teamId!={teamId} 
             GROUP BY lineId
         ),
+        allCorsiFor AS (
+            SELECT allCfLine as lineId, COUNT(*) as cf, SUM(xgoals) as xgf
+            FROM lineShots
+            WHERE teamId={teamId}
+            GROUP BY lineId
+        ),
+        allCorsiAgainst AS (
+            SELECT allCaLine as lineId, COUNT(*) as ca, SUM(xgoals) as xga
+            FROM lineShots
+            WHERE teamId!={teamId}
+            GROUP BY lineId
+        ),
         minutesPlayed AS (
             SELECT lineId, lineType, ROUND(SUM(duration)/60.0, 1) as mp
             FROM shifts
@@ -74,10 +88,20 @@ def get_team_analysis(db, teamId, gameId):
             LEFT JOIN defCorsiFor USING(lineId)
             LEFT JOIN defCorsiAgainst USING(lineId)
             WHERE lineType='def' AND mp>0.1
+        ),
+        allStats AS (
+            SELECT lineId, lineType, mp, IFNULL(cf,0) as cf, 
+                    IFNULL(ca,0) as ca,
+                    IFNULL(ROUND(xgf,2),0) as xgf,
+                    IFNULL(ROUND(xga,2),0) as xga
+            FROM minutesPlayed
+            LEFT JOIN allCorsiFor USING(lineId)
+            LEFT JOIN allCorsiAgainst USING(lineId)
+            WHERE lineType='skater' AND mp>0.1
         )
-        SELECT * FROM fwdStats
-        UNION
-        SELECT * FROM defStats
+        SELECT * FROM fwdStats UNION
+        SELECT * FROM defStats UNION
+        SELECT * FROM allStats
         ORDER BY lineType DESC, mp DESC;
         """
     )
@@ -106,7 +130,7 @@ def get_team_analysis(db, teamId, gameId):
     
     # return player_info
     
-    final = {'fwd': [], 'def': []}
+    final = {'fwd': [], 'def': [], 'skater': []}
     i = 1
     for line in lines:
         linies = [int(i) for i in line['lineId'].split('_')]
@@ -115,30 +139,18 @@ def get_team_analysis(db, teamId, gameId):
             'playerId': linie_id
         } for linie_id in linies]
 
-        if line['lineType'] == 'fwd':
-            final['fwd'].append({
-                'id': len(final['fwd']) + 1,
-                'mp': line['mp'],
-                'cf': line['cf'],
-                'ca': line['ca'],
-                'cr': line['cf'] - line['ca'],
-                'xgf': line['xgf'],
-                'xga': line['xga'],
-                'xgr': round(line['xgf'] - line['xga'], 2),
-                'players': players_in_line
-            })
-        else:
-            final['def'].append({
-                'id': len(final['def']) + 1,
-                'mp': line['mp'],
-                'cf': line['cf'],
-                'ca': line['ca'],
-                'cr': line['cf'] - line['ca'],
-                'xgf': line['xgf'],
-                'xga': line['xga'],
-                'xgr': round(line['xgf'] - line['xga'], 2),
-                'players': players_in_line
-            })
+        line_type = line['lineType']
+        final[line_type].append({
+            'id': len(final[line_type]) + 1,
+            'mp': line['mp'],
+            'cf': line['cf'],
+            'ca': line['ca'],
+            'cr': line['cf'] - line['ca'],
+            'xgf': line['xgf'],
+            'xga': line['xga'],
+            'xgr': round(line['xgf'] - line['xga'], 2),
+            'players': players_in_line
+        })
     return final
 
 def get_team_analysis_summary(db, gameId):
