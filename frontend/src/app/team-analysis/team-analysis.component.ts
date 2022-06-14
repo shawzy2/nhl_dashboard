@@ -33,12 +33,13 @@ export class TeamAnalysisComponent {
 
   directionsMessage: String = 'Please Select Team';
   teams: Team[] = [];
-  divisions: Division[] = []
+  divisions: Division[] = [];
   games: Game[] = [];
   lineStats: any = []; 
   // lineStats: LineStatsItem[] = []; 
-  gameSummary: any = {}
-  gameflow: any = {}
+  gameSummary: any = {};
+  gameflow: any = {};
+  shotMap: any = {};
 
   ngOnInit() {
     // update 'Select a Team' selector
@@ -46,6 +47,14 @@ export class TeamAnalysisComponent {
     this.http.get<any>(url).subscribe(
       response => {
         this.divisions = response as Division[];
+      }
+    )
+
+    var url = environment.apiUrl + `team-analysis/1/shot-maps/11`
+    this.http.get<any>(url).subscribe(
+      response => {
+        this.shotMap = response;
+        console.log(this.shotMap);
       }
     )
   }

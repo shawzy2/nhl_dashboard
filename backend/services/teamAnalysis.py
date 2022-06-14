@@ -366,3 +366,84 @@ def get_team_analysis_gameflow(db, gameId):
             final['goalTimesAway'].append(row['time'])
 
     return final
+
+
+def get_team_analysis_maps(db, teamId, gameId):
+    # query db to get shots
+    result = db.execute(
+        f"""
+        WITH gameInfo AS (
+            SELECT teamId, isHome 
+            FROM boxscores
+            WHERE gameId=2021030221
+        ),
+        allShots AS (
+            SELECT *
+            FROM shots
+            LEFT JOIN gameInfo USING(teamId)
+            WHERE gameId=2021030221
+        ),
+        shotsFor AS (
+            SELECT teamId, isHome, time, x, y, type, 'sf' AS category,
+                CASE WHEN isHome=1 THEN homeFwdIds ELSE awayFwdIds END as fwdLineId,
+                CASE WHEN isHome=1 THEN homeDefIds ELSE awayDefIds END as defLineId
+            FROM allShots
+            WHERE teamId=12 AND scenario='5on5'
+        ), 
+        shotsAgainst AS (
+            SELECT teamId, isHome, time, x, y, type, 'sa' AS category,
+                CASE WHEN isHome=1 THEN awayFwdIds ELSE homeFwdIds END as fwdLineId,
+                CASE WHEN isHome=1 THEN awayDefIds ELSE homeDefIds END as defLineId
+            FROM allShots
+            WHERE teamId!=12 AND scenario='5on5'
+        )
+        SELECT * FROM shotsFor UNION
+        SELECT * FROM shotsAgainst;
+        """
+    )
+
+    # return [row for row in result]  
+    final = {'fwd': {}, 'def': {}}
+    for row in result:
+        fwdLineId = row['fwdLineId']
+        defLineId = row['defLineId']
+        type = row['type']
+
+        if fwdLineId not in final['fwd']:
+            final['fwd'][fwdLineId] = {
+                'SHOT': [],
+                'GOAL': [],
+                'BLOCKED_SHOT': [],
+                'MISSED_SHOT': []
+            }
+        if defLineId not in final['def']:
+            final['def'][defLineId] = {
+                'SHOT': [],
+                'GOAL': [],
+                'BLOCKED_SHOT': [],
+                'MISSED_SHOT': []
+            }
+        
+        final['fwd'][fwdLineId][type].append({
+            'time': row['time'],
+            'x': row['x'],
+            'y': row['y']
+        })
+        final['def'][defLineId][type].append({
+            'time': row['time'],
+            'x': row['x'],
+            'y': row['y']
+        })
+
+    modified_final = {}
+    modified_final['Forwards'] = []
+    modified_final['Defensemen'] = []
+    modified_final['lineData'] = {}
+    for lineId, val in final['fwd'].items():
+        modified_final['Forwards'].append(lineId)
+        modified_final['lineData'][lineId] = val
+    for lineId, val in final['def'].items():
+        modified_final['Defensemen'].append(lineId)
+        modified_final['lineData'][lineId] = val
+
+    return modified_final
