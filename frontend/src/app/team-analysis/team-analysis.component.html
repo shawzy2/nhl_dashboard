@@ -125,7 +125,15 @@
 
 <div>
   <mat-card class="dashboard-card-5on5">
-    <app-shot-map [shotMap]="shotMap"></app-shot-map>
+    <div *ngIf="selectedGameId==0; else viewLineMap" class="please-select-gameId">
+      <img src="../../assets/logos/{{selectedTeam.id}}.svg" alt="Logo" class="please-select-logo">
+      <h2> {{directionsMessage}} </h2>
+    </div>
+    <ng-template #viewLineMap>
+      <app-shot-rink [data]="shotMap"></app-shot-rink> 
+    </ng-template>
+    <!-- <app-shot-map [shotMap]="shotMap" [awayLogo]="gameSummary.logoTeam1" [homeLogo]="gameSummary.logoTeam2"></app-shot-map> -->
+    <!-- <app-shot-rink></app-shot-rink> -->
   </mat-card>
 </div>
 

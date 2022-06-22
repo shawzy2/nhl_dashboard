@@ -49,14 +49,6 @@ export class TeamAnalysisComponent {
         this.divisions = response as Division[];
       }
     )
-
-    var url = environment.apiUrl + `team-analysis/1/shot-maps/11`
-    this.http.get<any>(url).subscribe(
-      response => {
-        this.shotMap = response;
-        console.log(this.shotMap);
-      }
-    )
   }
 
   changeSelectedTeam(selectedTeam: any) {
@@ -98,6 +90,15 @@ export class TeamAnalysisComponent {
     this.http.get<any>(url).subscribe(
       response => {
         this.gameflow = response;
+      }
+    )
+
+    // update shot map data
+    var url = environment.apiUrl + `team-analysis/${this.selectedGameId}/shot-maps/${this.selectedTeam.id}`
+    this.http.get<any>(url).subscribe(
+      response => {
+        this.shotMap = response;
+        console.log(this.shotMap);
       }
     )
   }

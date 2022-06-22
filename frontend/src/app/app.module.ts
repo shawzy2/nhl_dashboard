@@ -29,6 +29,7 @@ import { LineStatsComponent } from './components/line-stats/line-stats.component
 import { TeamAnalysisGameSummaryComponent } from './components/team-analysis-game-summary/team-analysis-game-summary.component';
 import { GameflowChartComponent } from './components/gameflow-chart/gameflow-chart.component';
 import { ShotMapComponent } from './components/shot-map/shot-map.component';
+import { ShotRinkComponent } from './components/shot-rink/shot-rink.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { ShotMapComponent } from './components/shot-map/shot-map.component';
     LineStatsComponent,
     TeamAnalysisGameSummaryComponent,
     GameflowChartComponent,
-    ShotMapComponent
+    ShotMapComponent,
+    ShotRinkComponent
   ],
   imports: [
     BrowserModule,

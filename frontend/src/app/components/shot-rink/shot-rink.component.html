@@ -1,0 +1,25 @@
+<div style="display: flex; align-items: center;">
+    <h1>Shot Attempts</h1>
+    <div class="line-selector">
+        <mat-form-field appearance="outline" style="width: 40vw;">
+            <mat-label>Select a Line</mat-label>
+            <mat-select [(value)]="selectedLineId" (selectionChange)="changeSelectedLineId($event.value)">
+                <mat-optgroup *ngFor="let lineGroup of lineGroups" [label]="lineGroup.positionStr">
+                    <mat-option *ngFor="let lineId of lineGroup.lines" [value]="lineId">
+                        {{data.lineData[lineId].name}} </mat-option>
+                </mat-optgroup>
+            </mat-select>
+        </mat-form-field>
+    </div>
+</div>
+
+<div>
+    <p> Selected line: {{selectedLineId}} </p>
+    <div>
+        {{shotMapData}}
+    </div>
+</div>
+
+<div class="size" id="divChart">
+    <canvas id="myChartShotRink"></canvas>
+</div>

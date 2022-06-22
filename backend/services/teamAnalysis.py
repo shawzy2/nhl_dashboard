@@ -375,27 +375,27 @@ def get_team_analysis_maps(db, teamId, gameId):
         WITH gameInfo AS (
             SELECT teamId, isHome 
             FROM boxscores
-            WHERE gameId=2021030221
+            WHERE gameId={gameId}
         ),
         allShots AS (
             SELECT *
             FROM shots
             LEFT JOIN gameInfo USING(teamId)
-            WHERE gameId=2021030221
+            WHERE gameId={gameId}
         ),
         shotsFor AS (
             SELECT teamId, isHome, time, x, y, type, 'sf' AS category,
                 CASE WHEN isHome=1 THEN homeFwdIds ELSE awayFwdIds END as fwdLineId,
                 CASE WHEN isHome=1 THEN homeDefIds ELSE awayDefIds END as defLineId
             FROM allShots
-            WHERE teamId=12 AND scenario='5on5'
+            WHERE teamId={teamId} AND scenario='5on5'
         ), 
         shotsAgainst AS (
             SELECT teamId, isHome, time, x, y, type, 'sa' AS category,
                 CASE WHEN isHome=1 THEN awayFwdIds ELSE homeFwdIds END as fwdLineId,
                 CASE WHEN isHome=1 THEN awayDefIds ELSE homeDefIds END as defLineId
             FROM allShots
-            WHERE teamId!=12 AND scenario='5on5'
+            WHERE teamId!={teamId} AND scenario='5on5'
         )
         SELECT * FROM shotsFor UNION
         SELECT * FROM shotsAgainst;
@@ -445,5 +445,30 @@ def get_team_analysis_maps(db, teamId, gameId):
     for lineId, val in final['def'].items():
         modified_final['Defensemen'].append(lineId)
         modified_final['lineData'][lineId] = val
+
+    # now get player names for each line
+    all_playerIds = set()
+    for line in modified_final['Forwards']:
+        for playerId in line.split('_'):
+            all_playerIds.add(playerId)
+    for line in modified_final['Defensemen']:
+        for playerId in line.split('_'):
+            all_playerIds.add(playerId)
+
+    players =  db.query(
+        models.Roster.playerId, 
+        models.Roster.firstName, 
+        models.Roster.lastName
+    ).filter(models.Roster.playerId.in_(all_playerIds)).all()
+    player_info = {}
+    for player in players:
+        player_info[player['playerId']] = {
+            'abbName': player['firstName'][:1] + '. ' + player['lastName']
+        }
+
+    for lineId in modified_final['Forwards']:
+        modified_final['lineData'][lineId]['name'] = ' - '.join([player_info[int(i)]['abbName'] for i in lineId.split('_')])
+    for lineId in modified_final['Defensemen']:
+        modified_final['lineData'][lineId]['name'] = ' - '.join([player_info[int(i)]['abbName'] for i in lineId.split('_')])
 
     return modified_final
