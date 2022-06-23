@@ -49,6 +49,8 @@ export class ShotRinkComponent implements OnInit {
         }
       ];
     }
+
+    this.clearData();
   }
 
   // when user selects a line
@@ -62,6 +64,22 @@ export class ShotRinkComponent implements OnInit {
   }
 
   loadChart(): void {
+    const backgroundImage = {
+      id: 'backgroundImage',
+      beforeDraw: (chart: any) => {
+        const image = new Image();
+        image.src = 'assets/backgrounds/nhlRinkHalf.png';
+        
+        if (image.complete) {
+          const ctx = chart.ctx;
+          const {top, right, bottom, left, width, height} = chart.chartArea;
+          ctx.drawImage(image, left, top, width, height);
+        } else {
+          image.onload = () => chart.draw();
+        }
+      }
+    }
+
     this.myChartObject = new Chart(this.chart, {
       type: 'scatter',
       data: { datasets: [] },
@@ -74,23 +92,23 @@ export class ShotRinkComponent implements OnInit {
         },
         scales: {
           x: {
-            min: -100,
+            min: 0,
             max: 100,
             ticks: {
-              display: true
+              display: false
             },
             grid: {
-              display: true
+              display: false
             }
           },
           y: {
             min: -42.5,
             max: 42.5,
             ticks: {
-              display: true
+              display: false
             },
             grid: {
-              display: true
+              display: false
             }
           }
         },
@@ -98,8 +116,10 @@ export class ShotRinkComponent implements OnInit {
           legend: {
             display: true
           }
-        }
-      }
+        },
+        maintainAspectRatio: false,
+      },
+      plugins: [backgroundImage]
     });
   }
 
@@ -107,29 +127,34 @@ export class ShotRinkComponent implements OnInit {
     this.myChartObject.data.datasets = [
       {
         label: 'goal',
-        data: this.shotMapData.GOAL,
+        data: this.shotMapData.sf.GOAL,
         backgroundColor: 'green',
         borderColor: 'black'
       },
       {
         label: 'shot',
-        data: this.shotMapData.SHOT,
+        data: this.shotMapData.sf.SHOT,
         backgroundColor: 'red',
         borderColor: 'black'
       },
       {
         label: 'missed shot',
-        data: this.shotMapData.MISSED_SHOT,
+        data: this.shotMapData.sf.MISSED_SHOT,
         backgroundColor: 'black',
         borderColor: 'black'
       },
       {
         label: 'blocked shot',
-        data: this.shotMapData.BLOCKED_SHOT,
+        data: this.shotMapData.sf.BLOCKED_SHOT,
         backgroundColor: 'orange',
         borderColor: 'black'
       }
     ]
+    this.myChartObject.update();
+  }
+
+  clearData(): void {
+    this.myChartObject.data.datasets = []
     this.myChartObject.update();
   }
 

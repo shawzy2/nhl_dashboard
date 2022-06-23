@@ -384,14 +384,18 @@ def get_team_analysis_maps(db, teamId, gameId):
             WHERE gameId={gameId}
         ),
         shotsFor AS (
-            SELECT teamId, isHome, time, x, y, type, 'sf' AS category,
+            SELECT teamId, isHome, time, type, 'sf' AS category,
+                CASE WHEN isHome=1 THEN x*-1 ELSE x END as x,
+                CASE WHEN isHome=1 THEN y*-1 ELSE y END as y,
                 CASE WHEN isHome=1 THEN homeFwdIds ELSE awayFwdIds END as fwdLineId,
                 CASE WHEN isHome=1 THEN homeDefIds ELSE awayDefIds END as defLineId
             FROM allShots
             WHERE teamId={teamId} AND scenario='5on5'
         ), 
         shotsAgainst AS (
-            SELECT teamId, isHome, time, x, y, type, 'sa' AS category,
+            SELECT teamId, isHome, time, type, 'sa' AS category,
+                CASE WHEN isHome=1 THEN x*-1 ELSE x END as x,
+                CASE WHEN isHome=1 THEN y*-1 ELSE y END as y,
                 CASE WHEN isHome=1 THEN awayFwdIds ELSE homeFwdIds END as fwdLineId,
                 CASE WHEN isHome=1 THEN awayDefIds ELSE homeDefIds END as defLineId
             FROM allShots
@@ -408,28 +412,45 @@ def get_team_analysis_maps(db, teamId, gameId):
         fwdLineId = row['fwdLineId']
         defLineId = row['defLineId']
         type = row['type']
+        category = row['category']
 
         if fwdLineId not in final['fwd']:
             final['fwd'][fwdLineId] = {
-                'SHOT': [],
-                'GOAL': [],
-                'BLOCKED_SHOT': [],
-                'MISSED_SHOT': []
+                'sf': {
+                    'SHOT': [],
+                    'GOAL': [],
+                    'BLOCKED_SHOT': [],
+                    'MISSED_SHOT': []
+                },
+                'sa': {
+                    'SHOT': [],
+                    'GOAL': [],
+                    'BLOCKED_SHOT': [],
+                    'MISSED_SHOT': []
+                }
             }
         if defLineId not in final['def']:
             final['def'][defLineId] = {
-                'SHOT': [],
-                'GOAL': [],
-                'BLOCKED_SHOT': [],
-                'MISSED_SHOT': []
+                'sf': {
+                    'SHOT': [],
+                    'GOAL': [],
+                    'BLOCKED_SHOT': [],
+                    'MISSED_SHOT': []
+                },
+                'sa': {
+                    'SHOT': [],
+                    'GOAL': [],
+                    'BLOCKED_SHOT': [],
+                    'MISSED_SHOT': []
+                }
             }
         
-        final['fwd'][fwdLineId][type].append({
+        final['fwd'][fwdLineId][category][type].append({
             'time': row['time'],
             'x': row['x'],
             'y': row['y']
         })
-        final['def'][defLineId][type].append({
+        final['def'][defLineId][category][type].append({
             'time': row['time'],
             'x': row['x'],
             'y': row['y']
