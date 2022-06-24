@@ -134,10 +134,22 @@ def get_team_analysis(db, teamId, gameId):
     i = 1
     for line in lines:
         linies = [int(i) for i in line['lineId'].split('_')]
-        players_in_line = [{
-            'name': player_info[linie_id]['abbName'],
-            'playerId': linie_id
-        } for linie_id in linies]
+        players_in_line = []
+        for linie_id in linies:
+            if linie_id in player_info:
+                players_in_line.append({
+                    'name': player_info[linie_id]['abbName'],
+                    'playerId': linie_id
+                })
+            else:
+                players_in_line.append({
+                    'name': 'no data',
+                    'playerId': 'noheadshot'
+                })
+        # players_in_line = [{
+        #     'name': player_info[linie_id]['abbName'],
+        #     'playerId': linie_id
+        # } for linie_id in linies]
 
         line_type = line['lineType']
         final[line_type].append({
@@ -493,8 +505,14 @@ def get_team_analysis_maps(db, teamId, gameId):
         }
 
     for lineId in modified_final['Forwards']:
-        modified_final['lineData'][lineId]['name'] = ' - '.join([player_info[int(i)]['abbName'] for i in lineId.split('_')])
+        try:
+            modified_final['lineData'][lineId]['name'] = ' - '.join([player_info[int(i)]['abbName'] for i in lineId.split('_')])
+        except:
+            pass
     for lineId in modified_final['Defensemen']:
-        modified_final['lineData'][lineId]['name'] = ' - '.join([player_info[int(i)]['abbName'] for i in lineId.split('_')])
+        try:
+            modified_final['lineData'][lineId]['name'] = ' - '.join([player_info[int(i)]['abbName'] for i in lineId.split('_')])
+        except:
+            pass
 
     return modified_final

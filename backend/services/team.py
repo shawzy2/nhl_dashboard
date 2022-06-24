@@ -2,8 +2,17 @@ def get_teams_by_division(db):
     # query db to get schedule for this team
     result = db.execute(
         f"""
-        SELECT teamId as id, name, division 
-        FROM teams
+        WITH t AS (
+            SELECT teamId, name, division 
+            FROM teams
+        ),
+        u AS (
+            SELECT DISTINCT(teamId) AS teamId
+            FROM boxscores
+        )
+        SELECT * 
+        FROM u
+        LEFT JOIN t USING(teamId)
         ORDER BY division, name;
         """
     )
@@ -18,7 +27,7 @@ def get_teams_by_division(db):
         if div not in divisions:
             divisions[div] = []
         divisions[div].append({
-            'id': team['id'],
+            'id': team['teamId'],
             'name': team['name']
         })
 
