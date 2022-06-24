@@ -85,6 +85,11 @@ def get_team_analysis_gameflow(request: Request, gameId: int, db: Session = Depe
 def get_team_analysis(request: Request, teamId: int, gameId: int, db: Session = Depends(get_db)):
     return teamAnalysis.get_team_analysis(db, teamId, gameId)
 
+@app.get("/team-analysis/{gameId}/shot-maps/{teamId}")
+def get_team_analysis_maps(request: Request, teamId: int, gameId: int, db: Session = Depends(get_db)):
+    return teamAnalysis.get_team_analysis_maps(db, teamId, gameId)
+
+
 
 
 # @app.get("/teamAnalysis/corsi/{gameId}/{teamId}")

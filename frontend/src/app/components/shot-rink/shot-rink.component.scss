@@ -1,0 +1,44 @@
+$headshot-aspect-ratio: 100px;
+
+.headshot {
+    max-width: $headshot-aspect-ratio;
+    max-height: $headshot-aspect-ratio;
+    width: auto; 
+    height: auto;
+    margin-right: 3px;
+    margin-left: 3px;
+    margin-bottom: 0px;
+    margin-top: 0px;
+}
+
+.headshot-fig {
+    margin: 0px;
+}
+
+.stats-bin {
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+}
+
+.headshots {
+    margin-right: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.params {
+    display: flex;
+    position: relative;
+    margin-left: auto;
+    margin-right: 5px;
+    margin-top: 5px;
+}
+
+.line-selector {
+    padding-right: 5px;
+}
+
+.for-against-toggle {
+    padding-top: 4px;
+}

@@ -134,10 +134,22 @@ def get_team_analysis(db, teamId, gameId):
     i = 1
     for line in lines:
         linies = [int(i) for i in line['lineId'].split('_')]
-        players_in_line = [{
-            'name': player_info[linie_id]['abbName'],
-            'playerId': linie_id
-        } for linie_id in linies]
+        players_in_line = []
+        for linie_id in linies:
+            if linie_id in player_info:
+                players_in_line.append({
+                    'name': player_info[linie_id]['abbName'],
+                    'playerId': linie_id
+                })
+            else:
+                players_in_line.append({
+                    'name': 'no data',
+                    'playerId': 'noheadshot'
+                })
+        # players_in_line = [{
+        #     'name': player_info[linie_id]['abbName'],
+        #     'playerId': linie_id
+        # } for linie_id in linies]
 
         line_type = line['lineType']
         final[line_type].append({
@@ -366,3 +378,141 @@ def get_team_analysis_gameflow(db, gameId):
             final['goalTimesAway'].append(row['time'])
 
     return final
+
+
+def get_team_analysis_maps(db, teamId, gameId):
+    # query db to get shots
+    result = db.execute(
+        f"""
+        WITH gameInfo AS (
+            SELECT teamId, isHome 
+            FROM boxscores
+            WHERE gameId={gameId}
+        ),
+        allShots AS (
+            SELECT *
+            FROM shots
+            LEFT JOIN gameInfo USING(teamId)
+            WHERE gameId={gameId}
+        ),
+        shotsFor AS (
+            SELECT teamId, isHome, time, type, 'sf' AS category,
+                CASE WHEN isHome=1 THEN x*-1 ELSE x END as x,
+                CASE WHEN isHome=1 THEN y*-1 ELSE y END as y,
+                CASE WHEN isHome=1 THEN homeFwdIds ELSE awayFwdIds END as fwdLineId,
+                CASE WHEN isHome=1 THEN homeDefIds ELSE awayDefIds END as defLineId
+            FROM allShots
+            WHERE teamId={teamId} AND scenario='5on5'
+        ), 
+        shotsAgainst AS (
+            SELECT teamId, isHome, time, type, 'sa' AS category,
+                CASE WHEN isHome=1 THEN x*-1 ELSE x END as x,
+                CASE WHEN isHome=1 THEN y*-1 ELSE y END as y,
+                CASE WHEN isHome=1 THEN awayFwdIds ELSE homeFwdIds END as fwdLineId,
+                CASE WHEN isHome=1 THEN awayDefIds ELSE homeDefIds END as defLineId
+            FROM allShots
+            WHERE teamId!={teamId} AND scenario='5on5'
+        )
+        SELECT * FROM shotsFor UNION
+        SELECT * FROM shotsAgainst;
+        """
+    )
+
+    # return [row for row in result]  
+    final = {'fwd': {}, 'def': {}}
+    for row in result:
+        fwdLineId = row['fwdLineId']
+        defLineId = row['defLineId']
+        type = row['type']
+        category = row['category']
+        x = row['x']
+        y = row['y']
+        if x < 0:
+            x = x*-1 # data entry is not consistent for home and away teams
+            y = y*-1
+
+        if fwdLineId not in final['fwd']:
+            final['fwd'][fwdLineId] = {
+                'sf': {
+                    'SHOT': [],
+                    'GOAL': [],
+                    'BLOCKED_SHOT': [],
+                    'MISSED_SHOT': []
+                },
+                'sa': {
+                    'SHOT': [],
+                    'GOAL': [],
+                    'BLOCKED_SHOT': [],
+                    'MISSED_SHOT': []
+                }
+            }
+        if defLineId not in final['def']:
+            final['def'][defLineId] = {
+                'sf': {
+                    'SHOT': [],
+                    'GOAL': [],
+                    'BLOCKED_SHOT': [],
+                    'MISSED_SHOT': []
+                },
+                'sa': {
+                    'SHOT': [],
+                    'GOAL': [],
+                    'BLOCKED_SHOT': [],
+                    'MISSED_SHOT': []
+                }
+            }
+        
+        final['fwd'][fwdLineId][category][type].append({
+            'time': row['time'],
+            'x': x,
+            'y': y
+        })
+        final['def'][defLineId][category][type].append({
+            'time': row['time'],
+            'x': x,
+            'y': y
+        })
+
+    modified_final = {}
+    modified_final['Forwards'] = []
+    modified_final['Defensemen'] = []
+    modified_final['lineData'] = {}
+    for lineId, val in final['fwd'].items():
+        modified_final['Forwards'].append(lineId)
+        modified_final['lineData'][lineId] = val
+    for lineId, val in final['def'].items():
+        modified_final['Defensemen'].append(lineId)
+        modified_final['lineData'][lineId] = val
+
+    # now get player names for each line
+    all_playerIds = set()
+    for line in modified_final['Forwards']:
+        for playerId in line.split('_'):
+            all_playerIds.add(playerId)
+    for line in modified_final['Defensemen']:
+        for playerId in line.split('_'):
+            all_playerIds.add(playerId)
+
+    players =  db.query(
+        models.Roster.playerId, 
+        models.Roster.firstName, 
+        models.Roster.lastName
+    ).filter(models.Roster.playerId.in_(all_playerIds)).all()
+    player_info = {}
+    for player in players:
+        player_info[player['playerId']] = {
+            'abbName': player['firstName'][:1] + '. ' + player['lastName']
+        }
+
+    for lineId in modified_final['Forwards']:
+        try:
+            modified_final['lineData'][lineId]['name'] = ' - '.join([player_info[int(i)]['abbName'] for i in lineId.split('_')])
+        except:
+            pass
+    for lineId in modified_final['Defensemen']:
+        try:
+            modified_final['lineData'][lineId]['name'] = ' - '.join([player_info[int(i)]['abbName'] for i in lineId.split('_')])
+        except:
+            pass
+
+    return modified_final

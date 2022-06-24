@@ -53,40 +53,6 @@
       </ng-template>
     </mat-card>
   </mat-grid-tile>
-
-  <!-- line tables/graphics -->
-  <!-- <mat-grid-tile [colspan]="5" [rowspan]="7">
-    <mat-card class="dashboard-card">
-      <div *ngIf="selectedGameId==0; else viewLineStats" class="please-select-gameId">
-        <img src="../../assets/logos/{{selectedTeam.id}}.svg" alt="Logo" class="please-select-logo">
-        <h2> {{directionsMessage}} </h2>
-      </div>
-      <ng-template #viewLineStats>
-        <div style="display: flex;">
-          <h1 class="headers">5on5 Line Statistics</h1>
-          <div class="info-tooltips">
-            <a mat-raised-button 
-                matTooltip="Click here to view details of expected goals model"
-                matTooltipPosition="above"
-                href="https://github.com/shawzy2/expected_goals" target="_blank">
-              Expected Goals Model  
-              <mat-icon>open_in_new</mat-icon>
-            </a>
-          </div>
-        </div>
-        <mat-tab-group animationDuration="0ms">
-          <mat-tab label="Forwards">
-            <app-line-stats [lineStats]="lineStats.fwd" [lineStatsType]="'fwd'" [lineStatsTableLength]="4"></app-line-stats>
-          </mat-tab>
-          <mat-tab label="Defensemen">
-            <app-line-stats [lineStats]="lineStats.def" [lineStatsType]="'def'" [lineStatsTableLength]="3"></app-line-stats>
-          </mat-tab>
-          <mat-tab label="Forwards+Defensemen"> placeholder </mat-tab>
-        </mat-tab-group>
-      </ng-template>
-    </mat-card>
-  </mat-grid-tile> -->
-
 </mat-grid-list>
 
 <div>
@@ -119,6 +85,18 @@
           <app-line-stats [lineStats]="lineStats.skater" [lineStatsType]="'group'" [lineStatsTableLength]="5"></app-line-stats>
         </mat-tab>
       </mat-tab-group>
+    </ng-template>
+  </mat-card>
+</div>
+
+<div>
+  <mat-card class="dashboard-card-5on5">
+    <div *ngIf="selectedGameId==0; else viewLineMap" class="please-select-gameId">
+      <img src="../../assets/logos/{{selectedTeam.id}}.svg" alt="Logo" class="please-select-logo">
+      <h2> {{directionsMessage}} </h2>
+    </div>
+    <ng-template #viewLineMap>
+      <app-shot-rink [data]="shotMap"></app-shot-rink> 
     </ng-template>
   </mat-card>
 </div>
