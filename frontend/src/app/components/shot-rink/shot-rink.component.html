@@ -1,25 +1,44 @@
 <div style="display: flex; align-items: center;">
     <h1>Shot Attempts</h1>
-    <div class="line-selector">
-        <mat-form-field appearance="outline" style="width: 40vw;">
-            <mat-label>Select a Line</mat-label>
-            <mat-select [(value)]="selectedLineId" (selectionChange)="changeSelectedLineId($event.value)">
-                <mat-optgroup *ngFor="let lineGroup of lineGroups" [label]="lineGroup.positionStr">
-                    <mat-option *ngFor="let lineId of lineGroup.lines" [value]="lineId">
-                        {{data.lineData[lineId].name}} </mat-option>
-                </mat-optgroup>
-            </mat-select>
-        </mat-form-field>
+    <div class="params">
+        <div class="line-selector">
+            <mat-form-field appearance="outline" style="width: 30vw;">
+                <mat-label>Select a Line</mat-label>
+                <mat-select [(value)]="selectedLineId" (selectionChange)="changeSelectedLineId($event.value)">
+                    <mat-optgroup *ngFor="let lineGroup of lineGroups" [label]="lineGroup.positionStr">
+                        <mat-option *ngFor="let lineId of lineGroup.lines" [value]="lineId">
+                            {{data.lineData[lineId].name}} </mat-option>
+                    </mat-optgroup>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="for-against-toggle">
+            <mat-button-toggle-group [(ngModel)]="shotCategory" (change)="changeCategory($event)" aria-label="Shot Category">
+                <mat-button-toggle value="sf">Shots For</mat-button-toggle>
+                <mat-button-toggle value="sa">Shots Against</mat-button-toggle>
+            </mat-button-toggle-group>
+        </div>
     </div>
 </div>
 
-<div>
-    <p> Selected line: {{selectedLineId}} </p>
+<div class="stats-bin">
+    <!-- player images -->
+    <div class="headshots">
+        <figure class="headshot-fig" *ngFor="let player of playersInLine">
+          <img class="headshot" [src]="'/assets/headshots/'+player+'.jpg'" />
+        </figure>
+    </div>
+
+    <!-- shot map -->
+    <div style="height:30vw; width:35vw;" id="divChart">
+        <canvas id="myChartShotRink"></canvas>
+    </div>
+
+    <!-- basic stats  -->
     <div>
-        {{shotMapData}}
+        <h2 style="text-decoration: underline; text-decoration-color: green;">Goals: {{ numGoals }}</h2>
+        <h2 style="text-decoration: underline; text-decoration-color: red;">Shots: {{ numShots }}</h2>
+        <h2 style="text-decoration: underline; text-decoration-color: black;">Missed Shots: {{ numMissedShots }}</h2>
+        <h2 style="text-decoration: underline; text-decoration-color: orange;">Blocked Shots: {{ numBlockedShots }}</h2>
     </div>
-</div>
-
-<div style="height:26vw; width:30vw" id="divChart">
-    <canvas id="myChartShotRink"></canvas>
 </div>

@@ -98,7 +98,6 @@ export class TeamAnalysisComponent {
     this.http.get<any>(url).subscribe(
       response => {
         this.shotMap = response;
-        console.log(this.shotMap);
       }
     )
   }

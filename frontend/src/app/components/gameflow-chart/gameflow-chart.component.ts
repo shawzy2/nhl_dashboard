@@ -49,12 +49,12 @@ export class GameflowChartComponent implements OnInit {
         let barWidth = 3;
         for (let goalTime of this.goalTimesHome) {
           offset = Number(goalTime) / this.totalTime * width;
-          ctx.fillStyle = this.colorHome;
+          ctx.fillStyle = this.colorHome + '80';
           ctx.fillRect(left + offset - (barWidth / 2), top, barWidth, height);
         }
         for (let goalTime of this.goalTimesAway) {
           offset = Number(goalTime) / this.totalTime * width;
-          ctx.fillStyle = this.colorAway;
+          ctx.fillStyle = this.colorAway + '80';
           ctx.fillRect(left + offset - (barWidth / 2), top, barWidth, height);
         }
 
@@ -97,7 +97,11 @@ export class GameflowChartComponent implements OnInit {
           },
           title: {
             display: true,
-            text: 'Shot Pace and Goals Scored (Vertical Bars)'
+            text: 'Shot Pace (Shots per 60 min)'
+          },
+          subtitle: {
+            display: true,
+            text: 'with Goals Scored (Vertical Bars)'
           }
         },
         scales: {

@@ -20,6 +20,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatTabsModule} from '@angular/material/tabs';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import { FormsModule } from '@angular/forms';
 
 import { HttpClientModule } from '@angular/common/http';
 
@@ -28,7 +30,6 @@ import { TeamAnalysisComponent } from './team-analysis/team-analysis.component';
 import { LineStatsComponent } from './components/line-stats/line-stats.component';
 import { TeamAnalysisGameSummaryComponent } from './components/team-analysis-game-summary/team-analysis-game-summary.component';
 import { GameflowChartComponent } from './components/gameflow-chart/gameflow-chart.component';
-import { ShotMapComponent } from './components/shot-map/shot-map.component';
 import { ShotRinkComponent } from './components/shot-rink/shot-rink.component';
 
 @NgModule({
@@ -39,7 +40,6 @@ import { ShotRinkComponent } from './components/shot-rink/shot-rink.component';
     LineStatsComponent,
     TeamAnalysisGameSummaryComponent,
     GameflowChartComponent,
-    ShotMapComponent,
     ShotRinkComponent
   ],
   imports: [
@@ -61,7 +61,9 @@ import { ShotRinkComponent } from './components/shot-rink/shot-rink.component';
     MatSortModule,
     MatTooltipModule,
     HttpClientModule,
-    MatTabsModule
+    MatTabsModule,
+    MatButtonToggleModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

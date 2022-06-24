@@ -14,6 +14,7 @@ interface LineGroup {
 export class ShotRinkComponent implements OnInit {
   
   @Input() selectedLineId: string = '';
+  @Input() shotCategory: string = 'sf';
   @Input() data: any = {
     'Forwards': [],
     'Defensemen': [],
@@ -21,6 +22,11 @@ export class ShotRinkComponent implements OnInit {
   };
   shotMapData: any;
   lineGroups: LineGroup[] = [];
+  playersInLine: any = ['noheadshot', 'noheadshot', 'noheadshot'];
+  numGoals: number = 0;
+  numShots: number = 0;
+  numMissedShots: number = 0;
+  numBlockedShots: number = 0;
   chart: any;
   myChartObject: any;
 
@@ -35,8 +41,6 @@ export class ShotRinkComponent implements OnInit {
   // when user selects a new game
   ngOnChanges(changes: SimpleChanges): void {
     if (!changes['data'].firstChange) {
-      console.log(this.data);
-
       this.selectedLineId = '';
       this.lineGroups = [
         {
@@ -49,18 +53,21 @@ export class ShotRinkComponent implements OnInit {
         }
       ];
     }
-
-    this.clearData();
+    if (this.myChartObject) {
+      this.clearData();
+    }
   }
 
   // when user selects a line
   changeSelectedLineId(selectedLineId: any) {
     this.selectedLineId = selectedLineId;
+    this.playersInLine = selectedLineId.split('_');
     this.shotMapData = this.data.lineData[selectedLineId];
-    console.log(this.shotMapData);
-
     this.updateData();
+  }
 
+  changeCategory(category: any) {
+    this.updateData();
   }
 
   loadChart(): void {
@@ -124,28 +131,35 @@ export class ShotRinkComponent implements OnInit {
   }
 
   updateData(): void {
+    // update basic stats
+    this.numGoals = this.shotMapData[this.shotCategory].GOAL.length;
+    this.numShots = this.shotMapData[this.shotCategory].SHOT.length;
+    this.numMissedShots = this.shotMapData[this.shotCategory].MISSED_SHOT.length;
+    this.numBlockedShots = this.shotMapData[this.shotCategory].BLOCKED_SHOT.length;
+
+    // update chart data
     this.myChartObject.data.datasets = [
       {
         label: 'goal',
-        data: this.shotMapData.sf.GOAL,
+        data: this.shotMapData[this.shotCategory].GOAL,
         backgroundColor: 'green',
         borderColor: 'black'
       },
       {
         label: 'shot',
-        data: this.shotMapData.sf.SHOT,
+        data: this.shotMapData[this.shotCategory].SHOT,
         backgroundColor: 'red',
         borderColor: 'black'
       },
       {
         label: 'missed shot',
-        data: this.shotMapData.sf.MISSED_SHOT,
+        data: this.shotMapData[this.shotCategory].MISSED_SHOT,
         backgroundColor: 'black',
         borderColor: 'black'
       },
       {
         label: 'blocked shot',
-        data: this.shotMapData.sf.BLOCKED_SHOT,
+        data: this.shotMapData[this.shotCategory].BLOCKED_SHOT,
         backgroundColor: 'orange',
         borderColor: 'black'
       }
@@ -154,7 +168,12 @@ export class ShotRinkComponent implements OnInit {
   }
 
   clearData(): void {
-    this.myChartObject.data.datasets = []
+    this.playersInLine = ['noheadshot', 'noheadshot', 'noheadshot'];
+    this.numGoals = 0;
+    this.numShots = 0;
+    this.numMissedShots = 0;
+    this.numBlockedShots = 0;
+    this.myChartObject.data.datasets = [];
     this.myChartObject.update();
   }
 

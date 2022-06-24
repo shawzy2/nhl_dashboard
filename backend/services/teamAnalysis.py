@@ -413,6 +413,11 @@ def get_team_analysis_maps(db, teamId, gameId):
         defLineId = row['defLineId']
         type = row['type']
         category = row['category']
+        x = row['x']
+        y = row['y']
+        if x < 0:
+            x = x*-1 # data entry is not consistent for home and away teams
+            y = y*-1
 
         if fwdLineId not in final['fwd']:
             final['fwd'][fwdLineId] = {
@@ -447,13 +452,13 @@ def get_team_analysis_maps(db, teamId, gameId):
         
         final['fwd'][fwdLineId][category][type].append({
             'time': row['time'],
-            'x': row['x'],
-            'y': row['y']
+            'x': x,
+            'y': y
         })
         final['def'][defLineId][category][type].append({
             'time': row['time'],
-            'x': row['x'],
-            'y': row['y']
+            'x': x,
+            'y': y
         })
 
     modified_final = {}
