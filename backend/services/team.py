@@ -1,6 +1,8 @@
+from sqlalchemy import text
+
 def get_teams_by_division(db):
     # query db to get schedule for this team
-    result = db.execute(
+    result = db.execute(text(
         f"""
         WITH t AS (
             SELECT teamId, name, division 
@@ -15,10 +17,10 @@ def get_teams_by_division(db):
         LEFT JOIN t USING(teamId)
         ORDER BY division, name;
         """
-    )
+    ))
 
     # convert to object
-    teams = [row for row in result]
+    teams = result.mappings().all()
 
     # group by division
     divisions = {}

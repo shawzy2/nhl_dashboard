@@ -4,10 +4,11 @@ requests
 numpy
 matplotlib
 scipy
-sklearn
+scikit-learn
 fastapi
 uvicorn[standard]==0.15.0
 python-multipart 
 sqlalchemy
 jinja2
 colormath
+colour-science

@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import JSONResponse, RedirectResponse
 from starlette.templating import Jinja2Templates
 
+import sqlite3
 from sqlalchemy.orm import Session
 from sqlalchemy import or_
 

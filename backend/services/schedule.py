@@ -1,10 +1,10 @@
-from sqlalchemy import null
+from sqlalchemy import null, text
 import models
 
 
 def get_team_schedule(db, teamId):
     # query db to get schedule for this team
-    result = db.execute(
+    result = db.execute(text(
         f"""
         WITH games as (
             SELECT gameId, awayTeamId, homeTeamId, date(dateTime,'-4 hours') as dateTime
@@ -25,10 +25,10 @@ def get_team_schedule(db, teamId):
         LEFT JOIN teamInfo t1 ON awayTeamId=t1.teamId
         LEFT JOIN teamInfo t2 ON homeTeamId=t2.teamId;
         """
-    )
+    ))
 
     # convert to object
-    games = [row for row in result]
+    games = result.mappings().all()
     
     final = []
     for game in games:

@@ -1,12 +1,12 @@
 from turtle import color
 from numpy import NaN
-from sqlalchemy import null
+from sqlalchemy import null, text
 import models
 from utils.color import decide_color
 
 def get_team_analysis(db, teamId, gameId):
     # query db to get line statistics
-    result = db.execute(
+    result = db.execute(text(
         f"""
         WITH lineShots AS (
             SELECT  gameId, teamId, homeTeamId, type, xgoals, scenario,
@@ -104,10 +104,10 @@ def get_team_analysis(db, teamId, gameId):
         SELECT * FROM allStats
         ORDER BY lineType DESC, mp DESC;
         """
-    )
+    ))
 
     # now convert lineId to individual players and names
-    lines = [row for row in result]
+    lines = result.mappings().all()
 
     all_playerIds = set()
     for line in lines:
@@ -120,12 +120,18 @@ def get_team_analysis(db, teamId, gameId):
         models.Roster.lastName,
         models.Roster.position
     ).filter(models.Roster.playerId.in_(all_playerIds)).all()
-
+    
+    print(players)
+    
     player_info = {}
+    idx_playerId = 0
+    idx_first_name = 1
+    idx_last_name = 2
+    idx_position = 3
     for player in players:
-        player_info[player['playerId']] = {
-            'abbName': player['firstName'][:1] + '. ' + player['lastName'],
-            'position': player['position']
+        player_info[player[idx_playerId]] = {
+            'abbName': player[idx_first_name][:1] + '. ' + player[idx_last_name],
+            'position': player[idx_position]
         }
     
     # return player_info
@@ -166,7 +172,7 @@ def get_team_analysis(db, teamId, gameId):
     return final
 
 def get_team_analysis_summary(db, gameId):
-    result = db.execute(
+    result = db.execute(text(
         f"""
         WITH game AS (
             SELECT teamId, isHome, goals, pim, 
@@ -200,14 +206,15 @@ def get_team_analysis_summary(db, gameId):
         LEFT JOIN allTeams USING(teamId)
         LEFT JOIN shotStats USING(teamId)
         LEFT JOIN faceoffStats USING(teamId);
-        """)
+        """
+    ))
 
     # read data from query
-    teams = [row for row in result]
-    # return teams
+    teams = result.mappings().all()
 
     teams_organized = {}
     for team in teams:
+        print(team)
         if team['isHome'] == 1:
             teams_organized['home'] = team
         else:
@@ -251,7 +258,7 @@ def get_team_analysis_summary(db, gameId):
     return final
 
 def get_team_analysis_gameflow(db, gameId):
-    result = db.execute(
+    result = db.execute(text(
         f"""
         WITH game AS (
             SELECT teamId, isHome
@@ -306,7 +313,7 @@ def get_team_analysis_gameflow(db, gameId):
         LEFT JOIN awayShotsAvg USING(time)
         WHERE time%60=0;
         """
-    )
+    ))
 
     final = {
         'labels': [],
@@ -315,7 +322,7 @@ def get_team_analysis_gameflow(db, gameId):
         'goalTimesHome': [],
         'goalTimesAway': []
     }
-    for row in result:
+    for row in result.mappings().all():
         if row['time'] % 300 == 0:
             final['labels'].append(str(int(row['time'] / 60)) + ':00')
         else:
@@ -324,7 +331,7 @@ def get_team_analysis_gameflow(db, gameId):
         final['shotsAvgAway'].append(row['shotsAvgAway'])
 
     # get colors and abbreviation for each team
-    result = db.execute(
+    result = db.execute(text(
         f"""
         SELECT abbreviation, isHome, primaryColor, secondaryColor
         FROM boxscores 
@@ -333,9 +340,9 @@ def get_team_analysis_gameflow(db, gameId):
         ) USING(teamId)
         WHERE gameId={gameId};
         """
-    )
+    ))
     available_colors = {}
-    for row in result:
+    for row in result.mappings().all():
         if row['isHome']:
             available_colors['homePrimary'] = row['primaryColor']
             available_colors['homeSecondary'] = row['secondaryColor']
@@ -349,7 +356,7 @@ def get_team_analysis_gameflow(db, gameId):
     final['colorAway'] = final_colors['away']
 
     # get goal times for each team
-    result = db.execute(
+    result = db.execute(text(
         f"""
         WITH game AS (
             SELECT teamId, isHome
@@ -370,8 +377,8 @@ def get_team_analysis_gameflow(db, gameId):
         LEFT JOIN game USING(teamId)
         WHERE type='GOAL';
         """
-    )
-    for row in result:
+    ))
+    for row in result.mappings().all():
         if row['isHome']:
             final['goalTimesHome'].append(row['time'])
         else:
@@ -382,7 +389,7 @@ def get_team_analysis_gameflow(db, gameId):
 
 def get_team_analysis_maps(db, teamId, gameId):
     # query db to get shots
-    result = db.execute(
+    result = db.execute(text(
         f"""
         WITH gameInfo AS (
             SELECT teamId, isHome 
@@ -416,11 +423,11 @@ def get_team_analysis_maps(db, teamId, gameId):
         SELECT * FROM shotsFor UNION
         SELECT * FROM shotsAgainst;
         """
-    )
+    ))
 
     # return [row for row in result]  
     final = {'fwd': {}, 'def': {}}
-    for row in result:
+    for row in result.mappings().all():
         fwdLineId = row['fwdLineId']
         defLineId = row['defLineId']
         type = row['type']
@@ -498,10 +505,14 @@ def get_team_analysis_maps(db, teamId, gameId):
         models.Roster.firstName, 
         models.Roster.lastName
     ).filter(models.Roster.playerId.in_(all_playerIds)).all()
+
     player_info = {}
+    idx_playerId = 0
+    idx_first_name = 1
+    idx_last_name = 2
     for player in players:
-        player_info[player['playerId']] = {
-            'abbName': player['firstName'][:1] + '. ' + player['lastName']
+        player_info[player[idx_playerId]] = {
+            'abbName': player[idx_first_name][:1] + '. ' + player[idx_last_name]
         }
 
     for lineId in modified_final['Forwards']:
