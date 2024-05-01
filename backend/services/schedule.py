@@ -13,13 +13,13 @@ def get_team_schedule(db, teamId):
             ORDER BY gameId
         ),
         teamInfo as (
-            SELECT teamId, teamName
+            SELECT teamId, name
             FROM teams
         )
         SELECT gameId, 
             awayTeamId,
-            t1.teamName AS awayTeam, 
-            t2.teamName as homeTeam,
+            t1.name AS awayTeam, 
+            t2.name as homeTeam,
             strftime('%m-%d', dateTime) as date
         FROM games
         LEFT JOIN teamInfo t1 ON awayTeamId=t1.teamId
