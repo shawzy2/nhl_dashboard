@@ -7,6 +7,7 @@ import pandas as pd
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./db.sqlite"
 # SQLALCHEMY_DATABASE_URL = "postgresql://user:password@postgresserver/db"
+PATH_TO_DATA = 'data/20232024'
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
@@ -16,7 +17,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
 # import shot data
-df = pd.read_json('data/shotCurrent.json', dtype={
+df = pd.read_json(f'{PATH_TO_DATA}/shotCurrent.json', dtype={
     'awayFwdIds': 'str',
     'awayDefIds': 'str',
     'awayGoalieIds': 'str',
@@ -27,33 +28,33 @@ df = pd.read_json('data/shotCurrent.json', dtype={
 df.to_sql(name='shots', con=engine, if_exists='replace', index=False)
 
 # import shift data
-df = pd.read_json('data/shiftCurrent.json', dtype={
+df = pd.read_json(f'{PATH_TO_DATA}/shiftCurrent.json', dtype={
     'lineId': 'str'
 })
 df.to_sql(name='shifts', con=engine, if_exists='replace', index=False)
 
 # import roster data
-df = pd.read_json('data/rosterCurrent.json', dtype={
+df = pd.read_json(f'{PATH_TO_DATA}/rosterCurrent.json', dtype={
     'birthDate': 'datetime64'
 })
 df.to_sql(name='rosters', con=engine, if_exists='replace', index=False)
 
 # import schedule data
-df = pd.read_json('data/scheduleCurrent.json')
+df = pd.read_json(f'{PATH_TO_DATA}/scheduleCurrent.json')
 df.to_sql(name='schedules', con=engine, if_exists='replace', index=False)
 
 # import team data
-df = pd.read_json('data/teamsCurrent.json')
+df = pd.read_json(f'{PATH_TO_DATA}/teamsCurrent.json')
 df.to_sql(name='teams', con=engine, if_exists='replace', index=False)
 
 # import faceoff data
-df = pd.read_json('data/faceoffCurrent.json')
+df = pd.read_json(f'{PATH_TO_DATA}/faceoffCurrent.json')
 df.to_sql(name='faceoffs', con=engine, if_exists='replace', index=False)
 
 # import penalty data
-df = pd.read_json('data/penaltyCurrent.json')
+df = pd.read_json(f'{PATH_TO_DATA}/penaltyCurrent.json')
 df.to_sql(name='penalties', con=engine, if_exists='replace', index=False)
 
 # import boxscore data
-df = pd.read_json('data/boxscoreCurrent.json')
+df = pd.read_json(f'{PATH_TO_DATA}/boxscoreCurrent.json')
 df.to_sql(name='boxscores', con=engine, if_exists='replace', index=False)

@@ -132,34 +132,34 @@ export class ShotRinkComponent implements OnInit {
 
   updateData(): void {
     // update basic stats
-    this.numGoals = this.shotMapData[this.shotCategory].GOAL.length;
-    this.numShots = this.shotMapData[this.shotCategory].SHOT.length;
-    this.numMissedShots = this.shotMapData[this.shotCategory].MISSED_SHOT.length;
-    this.numBlockedShots = this.shotMapData[this.shotCategory].BLOCKED_SHOT.length;
+    this.numGoals = this.shotMapData[this.shotCategory]['goal'].length;
+    this.numShots = this.shotMapData[this.shotCategory]['shot-on-goal'].length;
+    this.numMissedShots = this.shotMapData[this.shotCategory]['missed-shot'].length;
+    this.numBlockedShots = this.shotMapData[this.shotCategory]['blocked-shot'].length;
 
     // update chart data
     this.myChartObject.data.datasets = [
       {
         label: 'goal',
-        data: this.shotMapData[this.shotCategory].GOAL,
+        data: this.shotMapData[this.shotCategory]['goal'],
         backgroundColor: 'green',
         borderColor: 'black'
       },
       {
         label: 'shot',
-        data: this.shotMapData[this.shotCategory].SHOT,
+        data: this.shotMapData[this.shotCategory]['shot-on-goal'],
         backgroundColor: 'red',
         borderColor: 'black'
       },
       {
         label: 'missed shot',
-        data: this.shotMapData[this.shotCategory].MISSED_SHOT,
+        data: this.shotMapData[this.shotCategory]['missed-shot'],
         backgroundColor: 'black',
         borderColor: 'black'
       },
       {
         label: 'blocked shot',
-        data: this.shotMapData[this.shotCategory].BLOCKED_SHOT,
+        data: this.shotMapData[this.shotCategory]['blocked-shot'],
         backgroundColor: 'orange',
         borderColor: 'black'
       }

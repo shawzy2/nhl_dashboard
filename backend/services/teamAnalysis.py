@@ -186,8 +186,8 @@ def get_team_analysis_summary(db, gameId):
         ),
         shotStats AS (
             SELECT teamId, 
-                SUM(CASE type WHEN 'SHOT' THEN 1 
-                        WHEN 'GOAL' THEN 1
+                SUM(CASE type WHEN 'shot-on-goal' THEN 1 
+                        WHEN 'goal' THEN 1
                         ELSE 0 END) as sog,
                 COUNT(*) AS cf, 
                 ROUND(SUM(xgoals),2) as xgf
@@ -270,7 +270,7 @@ def get_team_analysis_gameflow(db, gameId):
                 time, 
                 SUM(1) as numShots
             FROM shots
-            WHERE (type='SHOT' OR type='GOAL') AND gameId={gameId}
+            WHERE (type='shot-on-goal' OR type='goal') AND gameId={gameId}
             GROUP BY teamId, time
         ),
         allTimeFrames AS (
@@ -369,13 +369,13 @@ def get_team_analysis_gameflow(db, gameId):
                 time, 
                 SUM(1) as numShots
             FROM shots
-            WHERE (type='SHOT' OR type='GOAL') AND gameId={gameId}
+            WHERE (type='shot-on-goal' OR type='goal') AND gameId={gameId}
             GROUP BY teamId, time
         )
         SELECT time, isHome
         FROM gameShots
         LEFT JOIN game USING(teamId)
-        WHERE type='GOAL';
+        WHERE type='goal';
         """
     ))
     for row in result.mappings().all():
@@ -441,31 +441,31 @@ def get_team_analysis_maps(db, teamId, gameId):
         if fwdLineId not in final['fwd']:
             final['fwd'][fwdLineId] = {
                 'sf': {
-                    'SHOT': [],
-                    'GOAL': [],
-                    'BLOCKED_SHOT': [],
-                    'MISSED_SHOT': []
+                    'shot-on-goal': [],
+                    'goal': [],
+                    'blocked-shot': [],
+                    'missed-shot': []
                 },
                 'sa': {
-                    'SHOT': [],
-                    'GOAL': [],
-                    'BLOCKED_SHOT': [],
-                    'MISSED_SHOT': []
+                    'shot-on-goal': [],
+                    'goal': [],
+                    'blocked-shot': [],
+                    'missed-shot': []
                 }
             }
         if defLineId not in final['def']:
             final['def'][defLineId] = {
                 'sf': {
-                    'SHOT': [],
-                    'GOAL': [],
-                    'BLOCKED_SHOT': [],
-                    'MISSED_SHOT': []
+                    'shot-on-goal': [],
+                    'goal': [],
+                    'blocked-shot': [],
+                    'missed-shot': []
                 },
                 'sa': {
-                    'SHOT': [],
-                    'GOAL': [],
-                    'BLOCKED_SHOT': [],
-                    'MISSED_SHOT': []
+                    'shot-on-goal': [],
+                    'goal': [],
+                    'blocked-shot': [],
+                    'missed-shot': []
                 }
             }
         
